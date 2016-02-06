@@ -5,6 +5,7 @@
 
 Ever wanted to make Sublime Text borderless like OS X?
 ### :fire: [Download Latest Version](https://github.com/mikadev001/SublimeText-Overlay/releases/latest)
+***SublimeOverlay is currently under MIT License. See LICENSE for more information***
 # Features:
 
 * Adjustable offset of inner window.
