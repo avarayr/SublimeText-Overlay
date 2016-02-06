@@ -12,7 +12,7 @@ Ever wanted to make Sublime Text borderless like OS X?
 * Togglable title text
 * Adjutable primary color for overlay
 
-*Note:*  These settings are accesable through options window (button in top right corner)
+*Note:*  These settings are accessible through options window (button in top right corner)
 # Requirements:
 * [.NET Framework 4.5+](https://www.microsoft.com/en-us/download/details.aspx?id=42642)
 * Windows 7+
