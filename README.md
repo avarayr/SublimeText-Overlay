@@ -10,7 +10,7 @@ Ever wanted to make Sublime Text borderless like OS X?
 
 * Adjustable offset of inner window.
 * Togglable title text
-* Adjutable primary color for overlay
+* Adjustable primary color for overlay
 
 *Note:*  These settings are accessible through options window (button in top right corner)
 # Requirements:
