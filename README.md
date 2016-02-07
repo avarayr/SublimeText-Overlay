@@ -20,7 +20,10 @@ Ever wanted to make Sublime Text borderless like OS X?
 # Usage:
 
 Open an instance of Sublime Text and run the executable of SublimeOverlay.  
-Currently supports only 1 instance of editor.
+
+
+ Currently supports only 1 instance of editor. 
+
 ------
 # FAQ: 
 
