@@ -152,6 +152,7 @@ namespace SublimeOverlay
             SetParent(pDocked.MainWindowHandle, container.Handle);
             InvalidateWindow(pDocked.MainWindowHandle);
             SendMessage(pDocked.MainWindowHandle, 0x000F /* WMPAINT */, 0, 0);
+            FitToWindow();
         }
         public void ToggleTitle()
         {
@@ -330,7 +331,7 @@ namespace SublimeOverlay
         {
             ResizeLocation = Point.Empty;
         }
-        public static void HideTitleBar(IntPtr hwnd)
+        public void HideTitleBar(IntPtr hwnd)
         {
             int style = GetWindowLong(hwnd, -16);
             style &= -12582913;
