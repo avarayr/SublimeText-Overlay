@@ -3,10 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="offsetX" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">9</Value>
+      <Value Profile="(Default)">5</Value>
     </Setting>
     <Setting Name="offsetY" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">32</Value>
+      <Value Profile="(Default)">5</Value>
     </Setting>
     <Setting Name="showTitle" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

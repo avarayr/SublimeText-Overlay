@@ -58,6 +58,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RECT.cs" />
+    <Compile Include="RedrawWindowFlags.cs" />
     <Compile Include="Settings.cs">
       <SubType>Form</SubType>
     </Compile>

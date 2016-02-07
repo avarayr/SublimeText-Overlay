@@ -183,6 +183,7 @@
             this.MinimumSize = new System.Drawing.Size(300, 300);
             this.Name = "MainForm";
             this.Text = "Sublime Overlay";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.titleBar.ResumeLayout(false);
             this.titleBar.PerformLayout();

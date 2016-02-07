@@ -47,12 +47,12 @@
             // offsetXTrack
             // 
             this.offsetXTrack.Location = new System.Drawing.Point(12, 25);
-            this.offsetXTrack.Maximum = 50;
-            this.offsetXTrack.Minimum = 5;
+            this.offsetXTrack.Maximum = 35;
+            this.offsetXTrack.Minimum = 1;
             this.offsetXTrack.Name = "offsetXTrack";
             this.offsetXTrack.Size = new System.Drawing.Size(260, 45);
             this.offsetXTrack.TabIndex = 0;
-            this.offsetXTrack.Value = 9;
+            this.offsetXTrack.Value = 5;
             this.offsetXTrack.Scroll += new System.EventHandler(this.trackBar_Scroll);
             // 
             // label1
@@ -76,12 +76,12 @@
             // offsetYTrack
             // 
             this.offsetYTrack.Location = new System.Drawing.Point(12, 86);
-            this.offsetYTrack.Maximum = 50;
-            this.offsetYTrack.Minimum = 5;
+            this.offsetYTrack.Maximum = 35;
+            this.offsetYTrack.Minimum = 1;
             this.offsetYTrack.Name = "offsetYTrack";
             this.offsetYTrack.Size = new System.Drawing.Size(260, 45);
             this.offsetYTrack.TabIndex = 2;
-            this.offsetYTrack.Value = 32;
+            this.offsetYTrack.Value = 5;
             this.offsetYTrack.Scroll += new System.EventHandler(this.trackBar_Scroll);
             // 
             // resetButton

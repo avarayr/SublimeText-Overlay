@@ -57,9 +57,29 @@ namespace SublimeOverlay
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+        [DllImport("user32.dll")]
+        static extern bool RedrawWindow(IntPtr hWnd, [In] ref RECT lprcUpdate, IntPtr hrgnUpdate, RedrawWindowFlags flags);
 
-        public static int GWL_STYLE = -16;
-        public static int WS_CHILD = 0x40000000;
+        [DllImport("user32.dll")]
+        static extern bool RedrawWindow(IntPtr hWnd, IntPtr lprcUpdate, IntPtr hrgnUpdate, RedrawWindowFlags flags);
+        public const uint WS_OVERLAPPED = 0x00000000;
+        public const uint WS_POPUP = 0x80000000;
+        public const uint WS_CHILD = 0x40000000;
+        public const uint WS_MINIMIZE = 0x20000000;
+        public const uint WS_VISIBLE = 0x10000000;
+        public const uint WS_DISABLED = 0x08000000;
+        public const uint WS_CLIPSIBLINGS = 0x04000000;
+        public const uint WS_CLIPCHILDREN = 0x02000000;
+        public const uint WS_MAXIMIZE = 0x01000000;
+        public const uint WS_CAPTION = 0x00C00000;     /* WS_BORDER | WS_DLGFRAME  */
+        public const uint WS_BORDER = 0x00800000;
+        public const uint WS_DLGFRAME = 0x00400000;
+        public const uint WS_VSCROLL = 0x00200000;
+        public const uint WS_HSCROLL = 0x00100000;
+        public const uint WS_SYSMENU = 0x00080000;
+        public const uint WS_THICKFRAME = 0x00040000;
+        public const uint WS_GROUP = 0x00020000;
+        public const uint WS_TABSTOP = 0x00010000;
 
         [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
         public static extern IntPtr SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int Y, int cx, int cy, int wFlags);
@@ -101,11 +121,20 @@ namespace SublimeOverlay
             Color foreColor = (255 - bgDelta < nThreshold) ? Color.Black : Color.White;
             return foreColor;
         }
+        private void InvalidateWindow(IntPtr hWnd)
+        {
+            RedrawWindow(hWnd, IntPtr.Zero, IntPtr.Zero, RedrawWindowFlags.NoFrame | RedrawWindowFlags.UpdateNow | RedrawWindowFlags.Invalidate);
+        }
         public void RefreshColor()
         {
             BackColor = panelContainer.BackColor = titleBar.BackColor = CurrentColor;
             titleText.ForeColor = IdealTextColor(BackColor);
         }
+        public void RefreshOffsets()
+        {
+            this.panelContainer.Padding = new Padding(OffsetX, OffsetY, OffsetX, OffsetY);
+        }
+        
         private void DockWindow()
         {
 
@@ -119,7 +148,9 @@ namespace SublimeOverlay
                     Application.Exit();
                 return;
             }
+            HideTitleBar(pDocked.MainWindowHandle);
             SetParent(pDocked.MainWindowHandle, container.Handle);
+            InvalidateWindow(pDocked.MainWindowHandle);
         }
         public void ToggleTitle()
         {
@@ -140,11 +171,12 @@ namespace SublimeOverlay
             RefreshColor();
             DockWindow();
             FitToWindow();
+            RefreshOffsets();
         }
         public void FitToWindow()
         {
             if (pDocked != null)
-                MoveWindow(pDocked.MainWindowHandle, -OffsetX, -OffsetY, container.Width + OffsetX + 20, container.Height + OffsetY + 10, true);
+                MoveWindow(pDocked.MainWindowHandle, 0, 0, container.Width, container.Height, true);
         }
         private void container_Resize(object sender, EventArgs e)
         {
@@ -297,7 +329,16 @@ namespace SublimeOverlay
         {
             ResizeLocation = Point.Empty;
         }
-
+        public static void HideTitleBar(IntPtr hwnd)
+        {
+            int style = GetWindowLong(hwnd, -16);
+            style &= -12582913;
+            style &= ~(int)WS_BORDER;
+            style &= ~(int)WS_DLGFRAME;
+            style &= ~(int)WS_THICKFRAME;
+            SetWindowLong(hwnd, -16, style);
+            SetWindowPos(hwnd, 0, 0, 0, 0, 0, 0x27);
+        }
         private void panelContainer_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -367,6 +408,14 @@ namespace SublimeOverlay
             {
                 currentColor = value;
             }
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            try
+            {
+                pDocked.CloseMainWindow();
+            } catch { }
         }
 
         

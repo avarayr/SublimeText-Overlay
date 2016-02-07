@@ -11,8 +11,8 @@ namespace SublimeOverlay
     public partial class Settings : Form
     {
         public MainForm mainForm;
-        private int defaultOffsetX = 9;
-        private int defaultOffsetY = 32;
+        private int defaultOffsetX = 5;
+        private int defaultOffsetY = 5;
         private Color defaultColor = Color.FromArgb(30, 30, 30);
         public Settings(MainForm form)
         {
@@ -27,7 +27,7 @@ namespace SublimeOverlay
         {
             mainForm.OffsetX = oX;
             mainForm.OffsetY = oY;
-            mainForm.FitToWindow();
+            mainForm.RefreshOffsets();
         }
         private void trackBar_Scroll(object sender, EventArgs e)
         {

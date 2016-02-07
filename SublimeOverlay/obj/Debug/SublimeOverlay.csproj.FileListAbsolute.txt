@@ -6,5 +6,4 @@ c:\users\mika\documents\visual studio 2013\Projects\SublimeOverlay\SublimeOverla
 c:\users\mika\documents\visual studio 2013\Projects\SublimeOverlay\SublimeOverlay\obj\Debug\SublimeOverlay.exe
 c:\users\mika\documents\visual studio 2013\Projects\SublimeOverlay\SublimeOverlay\obj\Debug\SublimeOverlay.pdb
 C:\Users\Mika\documents\visual studio 2013\Projects\SublimeOverlay\SublimeOverlay\obj\Debug\SublimeOverlay.Settings.resources
-C:\Users\Mika\documents\visual studio 2013\Projects\SublimeOverlay\SublimeOverlay\obj\Debug\SublimeOverlay.csprojResolveAssemblyReference.cache
 C:\Users\Mika\Documents\Visual Studio 2013\Projects\SublimeOverlay\SublimeOverlay\obj\Debug\SublimeOverlay.MainForm.resources
