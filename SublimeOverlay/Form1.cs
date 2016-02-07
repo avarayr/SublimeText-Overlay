@@ -151,6 +151,7 @@ namespace SublimeOverlay
             HideTitleBar(pDocked.MainWindowHandle);
             SetParent(pDocked.MainWindowHandle, container.Handle);
             InvalidateWindow(pDocked.MainWindowHandle);
+            SendMessage(pDocked.MainWindowHandle, 0x000F /* WMPAINT */, 0, 0);
         }
         public void ToggleTitle()
         {
