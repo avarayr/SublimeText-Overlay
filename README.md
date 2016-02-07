@@ -17,6 +17,7 @@ Ever wanted to make Sublime Text borderless like OS X?
 * Adjustable primary color for overlay
 
 *Note:*  These settings are accessible through options window (button in top right corner)
+<h4>For best experience, hide the menu from View->Hide Menu. It will still be available by pressing Alt key</h4>
 # Requirements:
 * [.NET Framework 4.5+](https://www.microsoft.com/en-us/download/details.aspx?id=42642)
 * Windows 7+
