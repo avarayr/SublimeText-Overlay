@@ -1,4 +1,6 @@
 ## Sublime Overlay [ BETA ]
+![img](https://img.shields.io/badge/version-beta-lightgrey.svg)
+
 ![img](http://i.imgur.com/tmJlAUj.png)
 
 **Warning: Tested only on Windows 10 with Sublime Text 3.x. Please open an issue if it's working incorrectly.**
