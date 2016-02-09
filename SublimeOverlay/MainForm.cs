@@ -2,9 +2,13 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security;
+using System.Security.Principal;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace SublimeOverlay
@@ -17,18 +21,19 @@ namespace SublimeOverlay
         private static bool showTitle = Properties.Settings.Default.showTitle;
         private static Color currentColor = Properties.Settings.Default.color;
         private Settings settingsWindow;
+        private bool preventForceFocus = false;
         public MainForm()
         {
             InitializeComponent();
             Region = RoundRegion(Width, Height, radius);
+            settingsWindow = new Settings(this);
             this.GotFocus += MainForm_GotFocus;
         }
 
         private void MainForm_GotFocus(object sender, EventArgs e)
         {
-            
-            if (!container.Bounds.Contains(PointToClient(MousePosition)) && 
-                !titleBar.Bounds.Contains(PointToClient(MousePosition)))
+            if (!titleBar.Bounds.Contains(PointToClient(MousePosition)) &&
+                !preventForceFocus)
             {
                 NativeMethods.SetForegroundWindow(pDocked.MainWindowHandle);
             }
@@ -109,14 +114,93 @@ namespace SublimeOverlay
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
-            settingsWindow = new Settings(this);
             
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length > 1)
+            {
+                var pathQuery = args.Skip(1).Where( arg => arg.StartsWith("--sublime-path="));
+                string path = "";
+                if (pathQuery.Count() != 0)
+                {
+                    string[] parts = pathQuery.First().Split('=');
+                    if (parts.Length != 2)
+                    {
+                        MessageBox.Show("Please specify correct editor path.");
+                        Application.Exit();
+                        return;
+                    }
+                    path = parts.Last().Replace("\"","");
+                }
+                if (args.Where(arg => arg.Contains("--startsublime")).Count() != 0)
+                {
+                    try
+                    {
+                        if (!RunSublime(path))
+                        {
+                            Application.Exit();
+                            return;
+                        }
+                    }
+                    catch (SecurityException exception)
+                    {
+                        MessageBox.Show("You need to run this app as administrator to start editor automatically!", "I need administrator rights", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Application.Exit();
+                        return;
+                    }
+                }
+            }
             if (!ShowTitle)
                 HideTitle();
             RefreshColor();
             DockWindow();
             FitToWindow();
             RefreshVisuals();
+        }
+        private bool IsAdministrator()
+        {
+            return (new WindowsPrincipal(WindowsIdentity.GetCurrent()))
+                    .IsInRole(WindowsBuiltInRole.Administrator);
+        } 
+        private bool RunSublime(string path)
+        {
+            if (!IsAdministrator())
+                throw new SecurityException();
+            if (path == "")
+            {
+                string path64 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + @"\Sublime Text 3\sublime_text.exe";
+                string path32 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86) + @"\Sublime Text 3\sublime_text.exe";
+                if (File.Exists(path64))
+                {
+                    path = path64;
+                }
+                else if (File.Exists(path32))
+                {
+                    path = path32;
+                }
+                else
+                {
+                    MessageBox.Show("No sublime executables found. Please specify it manually by passing the argument --sublime-path=\"FULL_PATH_TO_EDITOR\" (with quotes)", "No Sublime Text executable found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+            if (File.Exists(path))
+            {
+                Process editor = Process.Start(path);
+                int tries = 0;
+                int maxTries = 10;
+                do
+                {
+                    Thread.Sleep(1000);
+                    if (++tries == maxTries)
+                    {
+                        MessageBox.Show("Sublime is not starting so far. Please manually kill it from processes and try again!");
+                        return false;
+                    }
+                } while (!editor.MainWindowTitle.Contains("Sublime Text"));
+                return true;
+            }
+
+            return false;
         }
         public void FitToWindow()
         {
@@ -248,6 +332,7 @@ namespace SublimeOverlay
 
         private void panelContainer_MouseMove(object sender, MouseEventArgs e)
         {
+            preventForceFocus = true;
             if (e.Button == MouseButtons.Left && !ResizeLocation.IsEmpty)
             {
                 if (panelContainer.Cursor == Cursors.SizeNWSE)
@@ -267,23 +352,17 @@ namespace SublimeOverlay
             else
             {
                 panelContainer.Cursor = Cursors.Default;
+                preventForceFocus = false;
             }
+
         }
 
         private void panelContainer_MouseUp(object sender, MouseEventArgs e)
         {
+            preventForceFocus = false;
             ResizeLocation = Point.Empty;
         }
-        public void HideTitleBar(IntPtr hwnd)
-        {
-            int style = NativeMethods.GetWindowLong(hwnd, -16);
-            style &= -12582913;
-            style &= ~(int)NativeMethods.WS_BORDER;
-            style &= ~(int)NativeMethods.WS_DLGFRAME;
-            style &= ~(int)NativeMethods.WS_THICKFRAME;
-            NativeMethods.SetWindowLong(hwnd, -16, style);
-            NativeMethods.SetWindowPos(hwnd, 0, 0, 0, 0, 0, 0x27);
-        }
+        
         private void panelContainer_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -295,6 +374,20 @@ namespace SublimeOverlay
             }
             else
                 ResizeLocation = Point.Empty;
+        }
+        private void panelContainer_MouseLeave(object sender, EventArgs e)
+        {
+            preventForceFocus = false;
+        }
+        public void HideTitleBar(IntPtr hwnd)
+        {
+            int style = NativeMethods.GetWindowLong(hwnd, -16);
+            style &= -12582913;
+            style &= ~(int)NativeMethods.WS_BORDER;
+            style &= ~(int)NativeMethods.WS_DLGFRAME;
+            style &= ~(int)NativeMethods.WS_THICKFRAME;
+            NativeMethods.SetWindowLong(hwnd, -16, style);
+            NativeMethods.SetWindowPos(hwnd, 0, 0, 0, 0, 0, 0x27);
         }
         private void titleWatcher_Tick(object sender, EventArgs e)
         {
@@ -362,6 +455,8 @@ namespace SublimeOverlay
                 currentColor = value;
             }
         }
+
+        
 
         
         

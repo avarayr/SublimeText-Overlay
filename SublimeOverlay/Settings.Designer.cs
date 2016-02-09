@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Settings));
             this.offsetXTrack = new System.Windows.Forms.TrackBar();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -41,6 +42,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
             this.borderRadiusTrack = new System.Windows.Forms.TrackBar();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.offsetXTrack)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.offsetYTrack)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -171,11 +173,22 @@
             this.borderRadiusTrack.Value = 10;
             this.borderRadiusTrack.Scroll += new System.EventHandler(this.borderRadiusTrack_Scroll);
             // 
+            // label4
+            // 
+            this.label4.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label4.Location = new System.Drawing.Point(12, 333);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(264, 81);
+            this.label4.TabIndex = 12;
+            this.label4.Text = resources.GetString("label4.Text");
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 355);
+            this.ClientSize = new System.Drawing.Size(288, 423);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.borderRadiusTrack);
             this.Controls.Add(this.groupBox1);
@@ -215,5 +228,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TrackBar borderRadiusTrack;
+        private System.Windows.Forms.Label label4;
     }
 }

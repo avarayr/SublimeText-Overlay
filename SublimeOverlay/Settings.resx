@@ -120,4 +120,8 @@
   <metadata name="colorDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
+  <data name="label4.Text" xml:space="preserve">
+    <value>Tip: 
+Run SublimeOverlay with args --startsublime and It will find and automatically run your editor. If it doesn't, specify the path using the argument --sublime-path="FULL_PATH_TO_EDITOR" (with quotes)</value>
+  </data>
 </root>

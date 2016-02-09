@@ -156,6 +156,7 @@
             this.panelContainer.Size = new System.Drawing.Size(937, 542);
             this.panelContainer.TabIndex = 0;
             this.panelContainer.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelContainer_MouseDown);
+            this.panelContainer.MouseLeave += new System.EventHandler(this.panelContainer_MouseLeave);
             this.panelContainer.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panelContainer_MouseMove);
             this.panelContainer.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panelContainer_MouseUp);
             // 
