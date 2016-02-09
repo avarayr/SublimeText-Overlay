@@ -12,6 +12,9 @@ namespace SublimeOverlay
 
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern int GetWindowTextLength(HandleRef hWnd);
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]

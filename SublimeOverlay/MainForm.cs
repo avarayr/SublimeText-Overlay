@@ -21,6 +21,17 @@ namespace SublimeOverlay
         {
             InitializeComponent();
             Region = RoundRegion(Width, Height, radius);
+            this.GotFocus += MainForm_GotFocus;
+        }
+
+        private void MainForm_GotFocus(object sender, EventArgs e)
+        {
+            
+            if (!container.Bounds.Contains(PointToClient(MousePosition)) && 
+                !titleBar.Bounds.Contains(PointToClient(MousePosition)))
+            {
+                NativeMethods.SetForegroundWindow(pDocked.MainWindowHandle);
+            }
         }
         protected override CreateParams CreateParams
         {
