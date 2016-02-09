@@ -86,7 +86,7 @@ namespace SublimeOverlay
         private void DockWindow()
         {
 
-            pDocked = Process.GetProcesses().Where<Process>(s => s.MainWindowTitle.Contains("Sublime Text")).FirstOrDefault();
+            pDocked = Process.GetProcesses().Where<Process>(s => s.MainWindowTitle.Contains("Sublime Text") && Path.GetFileNameWithoutExtension(s.MainModule.FileName) == "sublime_text").FirstOrDefault();
             if (pDocked == null)
             {
                 DialogResult answer = MessageBox.Show("Please launch Sublime and click Retry", "Launch the editor", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning);
