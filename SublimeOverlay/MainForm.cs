@@ -11,7 +11,7 @@ namespace SublimeOverlay
 {
     public partial class MainForm : Form
     {
-        private int radius = 10;
+        private int radius = Properties.Settings.Default.radius;
         private static int oX = Properties.Settings.Default.offsetX;
         private static int oY = Properties.Settings.Default.offsetY;
         private static bool showTitle = Properties.Settings.Default.showTitle;
@@ -22,8 +22,6 @@ namespace SublimeOverlay
             InitializeComponent();
             Region = RoundRegion(Width, Height, radius);
         }
-        #region WINAPI
-
         protected override CreateParams CreateParams
         {
             get
@@ -34,82 +32,14 @@ namespace SublimeOverlay
                 return cp;
             }
         }
-        public const int WM_NCLBUTTONDOWN = 0xA1;
-        public const int HT_CAPTION = 0x2;
-        [DllImport("user32.dll")]
-        private static extern IntPtr SetForegroundWindow(int hWnd);
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern int GetWindowTextLength(HandleRef hWnd);
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern int GetWindowText(HandleRef hWnd, StringBuilder lpString, int nMaxCount);
-        [DllImportAttribute("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-        [DllImportAttribute("user32.dll")]
-        public static extern bool ReleaseCapture();
-        [DllImport("user32.dll")]
-        public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
-
-        [DllImport("user32.dll")]
-        public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
-        [DllImport("user32.dll")]
-        static extern bool RedrawWindow(IntPtr hWnd, [In] ref RECT lprcUpdate, IntPtr hrgnUpdate, RedrawWindowFlags flags);
-
-        [DllImport("user32.dll")]
-        static extern bool RedrawWindow(IntPtr hWnd, IntPtr lprcUpdate, IntPtr hrgnUpdate, RedrawWindowFlags flags);
-        public const uint WS_OVERLAPPED = 0x00000000;
-        public const uint WS_POPUP = 0x80000000;
-        public const uint WS_CHILD = 0x40000000;
-        public const uint WS_MINIMIZE = 0x20000000;
-        public const uint WS_VISIBLE = 0x10000000;
-        public const uint WS_DISABLED = 0x08000000;
-        public const uint WS_CLIPSIBLINGS = 0x04000000;
-        public const uint WS_CLIPCHILDREN = 0x02000000;
-        public const uint WS_MAXIMIZE = 0x01000000;
-        public const uint WS_CAPTION = 0x00C00000;     /* WS_BORDER | WS_DLGFRAME  */
-        public const uint WS_BORDER = 0x00800000;
-        public const uint WS_DLGFRAME = 0x00400000;
-        public const uint WS_VSCROLL = 0x00200000;
-        public const uint WS_HSCROLL = 0x00100000;
-        public const uint WS_SYSMENU = 0x00080000;
-        public const uint WS_THICKFRAME = 0x00040000;
-        public const uint WS_GROUP = 0x00020000;
-        public const uint WS_TABSTOP = 0x00010000;
-
-        [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
-        public static extern IntPtr SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int Y, int cx, int cy, int wFlags);
-        private const int SW_SHOWMAXIMIZED = 3;
-
-        [DllImport("user32.dll")]
-        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
-        private static extern IntPtr CreateRoundRectRgn
-        (
-            int nLeftRect, // x-coordinate of upper-left corner
-            int nTopRect, // y-coordinate of upper-left corner
-            int nRightRect, // x-coordinate of lower-right corner
-            int nBottomRect, // y-coordinate of lower-right corner
-            int nWidthEllipse, // height of ellipse
-            int nHeightEllipse // width of ellipse
-         );
-        const short SWP_NOMOVE = 0X2;
-        const short SWP_NOSIZE = 1;
-        const short SWP_NOZORDER = 0X4;
-        const int SWP_SHOWWINDOW = 0x0040;
-        #endregion
         private Process pDocked;
         Point ResizeLocation = Point.Empty;
 
         private string GetTitleText(IntPtr hWnd)
         {
-            int capacity = GetWindowTextLength(new HandleRef(this, hWnd)) * 2;
+            int capacity = WINAPI.GetWindowTextLength(new HandleRef(this, hWnd)) * 2;
             StringBuilder stringBuilder = new StringBuilder(capacity);
-            GetWindowText(new HandleRef(this, hWnd), stringBuilder, stringBuilder.Capacity);
+            WINAPI.GetWindowText(new HandleRef(this, hWnd), stringBuilder, stringBuilder.Capacity);
             return stringBuilder.ToString();
         }
         public Color IdealTextColor(Color bg)
@@ -123,16 +53,18 @@ namespace SublimeOverlay
         }
         private void InvalidateWindow(IntPtr hWnd)
         {
-            RedrawWindow(hWnd, IntPtr.Zero, IntPtr.Zero, RedrawWindowFlags.NoFrame | RedrawWindowFlags.UpdateNow | RedrawWindowFlags.Invalidate);
+            WINAPI.RedrawWindow(hWnd, IntPtr.Zero, IntPtr.Zero, RedrawWindowFlags.NoFrame | RedrawWindowFlags.UpdateNow | RedrawWindowFlags.Invalidate);
         }
         public void RefreshColor()
         {
             BackColor = panelContainer.BackColor = titleBar.BackColor = CurrentColor;
             titleText.ForeColor = IdealTextColor(BackColor);
         }
-        public void RefreshOffsets()
+        public void RefreshVisuals()
         {
             this.panelContainer.Padding = new Padding(OffsetX, OffsetY, OffsetX, OffsetY);
+            radius = Properties.Settings.Default.radius;
+            Region = RoundRegion(Width, Height, radius);
         }
         
         private void DockWindow()
@@ -149,9 +81,9 @@ namespace SublimeOverlay
                 return;
             }
             HideTitleBar(pDocked.MainWindowHandle);
-            SetParent(pDocked.MainWindowHandle, container.Handle);
+            WINAPI.SetParent(pDocked.MainWindowHandle, container.Handle);
             InvalidateWindow(pDocked.MainWindowHandle);
-            SendMessage(pDocked.MainWindowHandle, 0x000F /* WMPAINT */, 0, 0);
+            WINAPI.SendMessage(pDocked.MainWindowHandle, 0x000F /* WMPAINT */, 0, 0);
             FitToWindow();
         }
         public void ToggleTitle()
@@ -173,12 +105,12 @@ namespace SublimeOverlay
             RefreshColor();
             DockWindow();
             FitToWindow();
-            RefreshOffsets();
+            RefreshVisuals();
         }
         public void FitToWindow()
         {
             if (pDocked != null)
-                MoveWindow(pDocked.MainWindowHandle, 0, 0, container.Width, container.Height, true);
+                WINAPI.MoveWindow(pDocked.MainWindowHandle, 0, 0, container.Width, container.Height, true);
         }
         private void container_Resize(object sender, EventArgs e)
         {
@@ -188,8 +120,8 @@ namespace SublimeOverlay
         {
             if (e.Button == MouseButtons.Left)
             {
-                ReleaseCapture();
-                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+                WINAPI.ReleaseCapture();
+                WINAPI.SendMessage(Handle, WINAPI.WM_NCLBUTTONDOWN, WINAPI.HT_CAPTION, 0);
             }
         }
 
@@ -218,7 +150,7 @@ namespace SublimeOverlay
         }
         private Region RoundRegion(int width, int height, int radius)
         {
-            return System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, width, height, radius, radius)); 
+            return System.Drawing.Region.FromHrgn(WINAPI.CreateRoundRectRgn(0, 0, width, height, radius, radius)); 
         }
         private void minimizeButton_Click(object sender, EventArgs e)
         {
@@ -333,13 +265,13 @@ namespace SublimeOverlay
         }
         public void HideTitleBar(IntPtr hwnd)
         {
-            int style = GetWindowLong(hwnd, -16);
+            int style = WINAPI.GetWindowLong(hwnd, -16);
             style &= -12582913;
-            style &= ~(int)WS_BORDER;
-            style &= ~(int)WS_DLGFRAME;
-            style &= ~(int)WS_THICKFRAME;
-            SetWindowLong(hwnd, -16, style);
-            SetWindowPos(hwnd, 0, 0, 0, 0, 0, 0x27);
+            style &= ~(int)WINAPI.WS_BORDER;
+            style &= ~(int)WINAPI.WS_DLGFRAME;
+            style &= ~(int)WINAPI.WS_THICKFRAME;
+            WINAPI.SetWindowLong(hwnd, -16, style);
+            WINAPI.SetWindowPos(hwnd, 0, 0, 0, 0, 0, 0x27);
         }
         private void panelContainer_MouseDown(object sender, MouseEventArgs e)
         {
@@ -371,6 +303,14 @@ namespace SublimeOverlay
         private void settingsButton_Click(object sender, EventArgs e)
         {
             settingsWindow.Show();
+        }
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            try
+            {
+                pDocked.CloseMainWindow();
+            }
+            catch { }
         }
 
         public int OffsetX
@@ -412,14 +352,7 @@ namespace SublimeOverlay
             }
         }
 
-        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            try
-            {
-                pDocked.CloseMainWindow();
-            } catch { }
-        }
-
+        
         
     }
 }

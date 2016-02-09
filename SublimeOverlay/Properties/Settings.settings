@@ -14,5 +14,8 @@
     <Setting Name="color" Type="System.Drawing.Color" Scope="User">
       <Value Profile="(Default)">30, 30, 30</Value>
     </Setting>
+    <Setting Name="radius" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

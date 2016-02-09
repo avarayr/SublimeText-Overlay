@@ -13,7 +13,9 @@ namespace SublimeOverlay
         public MainForm mainForm;
         private int defaultOffsetX = 5;
         private int defaultOffsetY = 5;
+        private int defaultRadius = 10;
         private Color defaultColor = Color.FromArgb(30, 30, 30);
+        
         public Settings(MainForm form)
         {
             this.mainForm = form;
@@ -27,7 +29,7 @@ namespace SublimeOverlay
         {
             mainForm.OffsetX = oX;
             mainForm.OffsetY = oY;
-            mainForm.RefreshOffsets();
+            mainForm.RefreshVisuals();
         }
         private void trackBar_Scroll(object sender, EventArgs e)
         {
@@ -38,6 +40,12 @@ namespace SublimeOverlay
             Properties.Settings.Default.offsetY = oY;
             SaveSettings();
         }
+        private void borderRadiusTrack_Scroll(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.radius = borderRadiusTrack.Value;
+            SaveSettings();
+            mainForm.RefreshVisuals();
+        }
 
         private void resetButton_Click(object sender, EventArgs e)
         {
@@ -45,10 +53,11 @@ namespace SublimeOverlay
                 return;
             Properties.Settings.Default.offsetX = offsetXTrack.Value = defaultOffsetX;
             Properties.Settings.Default.offsetY = offsetYTrack.Value = defaultOffsetY;
-
+            Properties.Settings.Default.radius = borderRadiusTrack.Value = defaultRadius;
             AlterSize(defaultOffsetX, defaultOffsetY);
             Properties.Settings.Default.color = colorPreview.BackColor = mainForm.CurrentColor = defaultColor;
             mainForm.RefreshColor();
+            mainForm.RefreshVisuals();
             SaveSettings();
         }
 
@@ -114,6 +123,8 @@ namespace SublimeOverlay
             }
             return bitmap;
         }
+
+        
 
     }
 }

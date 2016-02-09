@@ -70,5 +70,17 @@ namespace SublimeOverlay.Properties {
                 this["color"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int radius {
+            get {
+                return ((int)(this["radius"]));
+            }
+            set {
+                this["radius"] = value;
+            }
+        }
     }
 }

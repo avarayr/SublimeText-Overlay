@@ -39,9 +39,12 @@
             this.changeColorButton = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.borderRadiusTrack = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.offsetXTrack)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.offsetYTrack)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.borderRadiusTrack)).BeginInit();
             this.SuspendLayout();
             // 
             // offsetXTrack
@@ -86,9 +89,9 @@
             // 
             // resetButton
             // 
-            this.resetButton.Location = new System.Drawing.Point(15, 224);
+            this.resetButton.Location = new System.Drawing.Point(15, 297);
             this.resetButton.Name = "resetButton";
-            this.resetButton.Size = new System.Drawing.Size(257, 31);
+            this.resetButton.Size = new System.Drawing.Size(257, 33);
             this.resetButton.TabIndex = 4;
             this.resetButton.Text = "Reset";
             this.resetButton.UseVisualStyleBackColor = true;
@@ -99,7 +102,7 @@
             this.showTitleCheckbox.AutoSize = true;
             this.showTitleCheckbox.Checked = true;
             this.showTitleCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.showTitleCheckbox.Location = new System.Drawing.Point(12, 125);
+            this.showTitleCheckbox.Location = new System.Drawing.Point(12, 198);
             this.showTitleCheckbox.Name = "showTitleCheckbox";
             this.showTitleCheckbox.Size = new System.Drawing.Size(76, 17);
             this.showTitleCheckbox.TabIndex = 5;
@@ -141,18 +144,40 @@
             this.groupBox1.Controls.Add(this.changeColorButton);
             this.groupBox1.Controls.Add(this.button3);
             this.groupBox1.Controls.Add(this.colorPreview);
-            this.groupBox1.Location = new System.Drawing.Point(15, 145);
+            this.groupBox1.Location = new System.Drawing.Point(15, 218);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(257, 75);
+            this.groupBox1.Size = new System.Drawing.Size(257, 77);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Base Color";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 122);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(74, 13);
+            this.label3.TabIndex = 11;
+            this.label3.Text = "Border Radius";
+            // 
+            // borderRadiusTrack
+            // 
+            this.borderRadiusTrack.Location = new System.Drawing.Point(12, 138);
+            this.borderRadiusTrack.Maximum = 35;
+            this.borderRadiusTrack.Minimum = 1;
+            this.borderRadiusTrack.Name = "borderRadiusTrack";
+            this.borderRadiusTrack.Size = new System.Drawing.Size(260, 45);
+            this.borderRadiusTrack.TabIndex = 10;
+            this.borderRadiusTrack.Value = 10;
+            this.borderRadiusTrack.Scroll += new System.EventHandler(this.borderRadiusTrack_Scroll);
             // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(284, 261);
+            this.ClientSize = new System.Drawing.Size(284, 355);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.borderRadiusTrack);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.showTitleCheckbox);
             this.Controls.Add(this.resetButton);
@@ -169,6 +194,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.offsetXTrack)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.offsetYTrack)).EndInit();
             this.groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.borderRadiusTrack)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -187,5 +213,7 @@
         private System.Windows.Forms.Button changeColorButton;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TrackBar borderRadiusTrack;
     }
 }
