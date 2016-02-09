@@ -37,9 +37,9 @@ namespace SublimeOverlay
 
         private string GetTitleText(IntPtr hWnd)
         {
-            int capacity = WINAPI.GetWindowTextLength(new HandleRef(this, hWnd)) * 2;
+            int capacity = NativeMethods.GetWindowTextLength(new HandleRef(this, hWnd)) * 2;
             StringBuilder stringBuilder = new StringBuilder(capacity);
-            WINAPI.GetWindowText(new HandleRef(this, hWnd), stringBuilder, stringBuilder.Capacity);
+            NativeMethods.GetWindowText(new HandleRef(this, hWnd), stringBuilder, stringBuilder.Capacity);
             return stringBuilder.ToString();
         }
         public Color IdealTextColor(Color bg)
@@ -53,7 +53,7 @@ namespace SublimeOverlay
         }
         private void InvalidateWindow(IntPtr hWnd)
         {
-            WINAPI.RedrawWindow(hWnd, IntPtr.Zero, IntPtr.Zero, RedrawWindowFlags.NoFrame | RedrawWindowFlags.UpdateNow | RedrawWindowFlags.Invalidate);
+            NativeMethods.RedrawWindow(hWnd, IntPtr.Zero, IntPtr.Zero, RedrawWindowFlags.NoFrame | RedrawWindowFlags.UpdateNow | RedrawWindowFlags.Invalidate);
         }
         public void RefreshColor()
         {
@@ -81,9 +81,9 @@ namespace SublimeOverlay
                 return;
             }
             HideTitleBar(pDocked.MainWindowHandle);
-            WINAPI.SetParent(pDocked.MainWindowHandle, container.Handle);
+            NativeMethods.SetParent(pDocked.MainWindowHandle, container.Handle);
             InvalidateWindow(pDocked.MainWindowHandle);
-            WINAPI.SendMessage(pDocked.MainWindowHandle, 0x000F /* WMPAINT */, 0, 0);
+            NativeMethods.SendMessage(pDocked.MainWindowHandle, (uint)0x000F /* WMPAINT */, UIntPtr.Zero, IntPtr.Zero);
             FitToWindow();
         }
         public void ToggleTitle()
@@ -110,7 +110,7 @@ namespace SublimeOverlay
         public void FitToWindow()
         {
             if (pDocked != null)
-                WINAPI.MoveWindow(pDocked.MainWindowHandle, 0, 0, container.Width, container.Height, true);
+                NativeMethods.MoveWindow(pDocked.MainWindowHandle, 0, 0, container.Width, container.Height, true);
         }
         private void container_Resize(object sender, EventArgs e)
         {
@@ -120,8 +120,8 @@ namespace SublimeOverlay
         {
             if (e.Button == MouseButtons.Left)
             {
-                WINAPI.ReleaseCapture();
-                WINAPI.SendMessage(Handle, WINAPI.WM_NCLBUTTONDOWN, WINAPI.HT_CAPTION, 0);
+                NativeMethods.ReleaseCapture();
+                NativeMethods.SendMessage(Handle, NativeMethods.WM_NCLBUTTONDOWN, new UIntPtr(NativeMethods.HT_CAPTION), IntPtr.Zero);
             }
         }
 
@@ -150,7 +150,7 @@ namespace SublimeOverlay
         }
         private Region RoundRegion(int width, int height, int radius)
         {
-            return System.Drawing.Region.FromHrgn(WINAPI.CreateRoundRectRgn(0, 0, width, height, radius, radius)); 
+            return System.Drawing.Region.FromHrgn(NativeMethods.CreateRoundRectRgn(0, 0, width, height, radius, radius)); 
         }
         private void minimizeButton_Click(object sender, EventArgs e)
         {
@@ -265,13 +265,13 @@ namespace SublimeOverlay
         }
         public void HideTitleBar(IntPtr hwnd)
         {
-            int style = WINAPI.GetWindowLong(hwnd, -16);
+            int style = NativeMethods.GetWindowLong(hwnd, -16);
             style &= -12582913;
-            style &= ~(int)WINAPI.WS_BORDER;
-            style &= ~(int)WINAPI.WS_DLGFRAME;
-            style &= ~(int)WINAPI.WS_THICKFRAME;
-            WINAPI.SetWindowLong(hwnd, -16, style);
-            WINAPI.SetWindowPos(hwnd, 0, 0, 0, 0, 0, 0x27);
+            style &= ~(int)NativeMethods.WS_BORDER;
+            style &= ~(int)NativeMethods.WS_DLGFRAME;
+            style &= ~(int)NativeMethods.WS_THICKFRAME;
+            NativeMethods.SetWindowLong(hwnd, -16, style);
+            NativeMethods.SetWindowPos(hwnd, 0, 0, 0, 0, 0, 0x27);
         }
         private void panelContainer_MouseDown(object sender, MouseEventArgs e)
         {

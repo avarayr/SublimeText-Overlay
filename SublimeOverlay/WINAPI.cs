@@ -7,19 +7,17 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 namespace SublimeOverlay
 {
-    public class WINAPI
+    class NativeMethods
     {
 
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
-        [DllImport("user32.dll")]
-        public static extern IntPtr SetForegroundWindow(int hWnd);
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern int GetWindowTextLength(HandleRef hWnd);
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern int GetWindowText(HandleRef hWnd, StringBuilder lpString, int nMaxCount);
         [DllImportAttribute("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
+        public static extern int SendMessage(IntPtr hWnd, uint wMsg, UIntPtr wParam, IntPtr lParam);
         [DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
         [DllImport("user32.dll")]
