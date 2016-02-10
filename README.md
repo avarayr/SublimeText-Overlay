@@ -1,5 +1,5 @@
-## Sublime Overlay [ BETA ]
-![img](https://img.shields.io/badge/version-beta-lightgrey.svg)
+## Sublime Overlay
+![img](https://img.shields.io/badge/version-stable-lightgrey.svg)
 ![img](https://img.shields.io/github/issues/mikadev001/SublimeText-Overlay.svg)
 
 
