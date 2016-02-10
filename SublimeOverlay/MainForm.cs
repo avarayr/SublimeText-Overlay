@@ -84,7 +84,7 @@ namespace SublimeOverlay
         }
         public void RefreshColor()
         {
-            BackColor = panelContainer.BackColor = titleBar.BackColor = CurrentColor;
+            BackColor = container.BackColor = panelContainer.BackColor = titleBar.BackColor = CurrentColor;
             titleText.ForeColor = IdealTextColor(BackColor);
         }
         public void RefreshVisuals()
@@ -109,7 +109,7 @@ namespace SublimeOverlay
                 return;
             }
             HideTitleBar(pDocked.MainWindowHandle);
-            NativeMethods.SetParent(pDocked.MainWindowHandle, container.Handle);
+            NativeMethods.SetWindowLong(pDocked.MainWindowHandle, -8 /* OWNER */, (int)container.Handle);
             InvalidateWindow(pDocked.MainWindowHandle);
             NativeMethods.SendMessage(pDocked.MainWindowHandle, (uint)0x000F /* WMPAINT */, UIntPtr.Zero, IntPtr.Zero);
             FitToWindow();
@@ -251,7 +251,7 @@ namespace SublimeOverlay
         public void FitToWindow()
         {
             if (pDocked != null)
-                NativeMethods.MoveWindow(pDocked.MainWindowHandle, 0, 0, container.Width, container.Height, true);
+                NativeMethods.MoveWindow(pDocked.MainWindowHandle, PointToScreen(container.Location).X, PointToScreen(container.Location).Y + titleBar.Height - 2, container.Width, container.Height, true);
         }
         private void container_Resize(object sender, EventArgs e)
         {
@@ -311,7 +311,7 @@ namespace SublimeOverlay
         {
             Maximize();
         }
-
+        
         // http://stackoverflow.com/a/17220049
         protected override void WndProc(ref Message m)
         {
@@ -324,7 +324,6 @@ namespace SublimeOverlay
             const int htBottom = 15;
             const int htBottomLeft = 16;
             const int htBottomRight = 17;
-
             if (m.Msg == wmNcHitTest)
             {
                 int x = (int)(m.LParam.ToInt64() & 0xFFFF);
@@ -453,7 +452,6 @@ namespace SublimeOverlay
                 titleTooltip.SetToolTip(titleText, title);
             }
         }
-
         private void titleText_DoubleClick(object sender, EventArgs e)
         {
             Maximize();
@@ -471,7 +469,13 @@ namespace SublimeOverlay
             }
             catch { }
         }
-
+        private void MainForm_Move(object sender, EventArgs e)
+        {
+            if (pDocked != null)
+            {
+                FitToWindow();
+            }
+        }
         public int OffsetX
         {
             get
@@ -542,6 +546,9 @@ namespace SublimeOverlay
             Right
         }
 
+        
+
+        
         
         
     }

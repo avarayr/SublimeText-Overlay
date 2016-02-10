@@ -9,7 +9,14 @@ namespace SublimeOverlay
 {
     class NativeMethods
     {
-
+        public const int AW_HIDE = 0X10000;
+        public const int AW_ACTIVATE = 0X20000;
+        public const int AW_HOR_POSITIVE = 0X1;
+        public const int AW_HOR_NEGATIVE = 0X2;
+        public const int AW_SLIDE = 0X40000;
+        public const int AW_BLEND = 0X80000;
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern int AnimateWindow (IntPtr hWnd, int dwTime, int dwFlags);
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
         [System.Runtime.InteropServices.DllImport("user32.dll")]
