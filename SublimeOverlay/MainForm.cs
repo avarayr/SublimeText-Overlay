@@ -28,12 +28,17 @@ namespace SublimeOverlay
             Region = RoundRegion(Width, Height, radius);
             settingsWindow = new Settings(this);
             this.GotFocus += MainForm_GotFocus;
+            
         }
-
+        private bool isWindowActive(IntPtr hWnd)
+        {
+            return NativeMethods.GetForegroundWindow() == hWnd;
+        }
         private void MainForm_GotFocus(object sender, EventArgs e)
         {
             if (!titleBar.Bounds.Contains(PointToClient(MousePosition)) &&
-                !preventForceFocus)
+                !preventForceFocus &&
+                !isWindowActive(pDocked.MainWindowHandle))
             {
                 NativeMethods.SetForegroundWindow(pDocked.MainWindowHandle);
             }
@@ -43,8 +48,12 @@ namespace SublimeOverlay
             get
             {
                 const int CS_DROPSHADOW = 0x20000;
+                const int WS_MINIMIZEBOX = 0x20000;
+                const int CS_DBLCLKS = 0x8;
                 CreateParams cp = base.CreateParams;
                 cp.ClassStyle |= CS_DROPSHADOW;
+                cp.Style |= WS_MINIMIZEBOX;
+                cp.ClassStyle |= CS_DBLCLKS;
                 return cp;
             }
         }
