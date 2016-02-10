@@ -82,5 +82,29 @@ namespace SublimeOverlay.Properties {
                 this["radius"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool reverseWindowControls {
+            get {
+                return ((bool)(this["reverseWindowControls"]));
+            }
+            set {
+                this["reverseWindowControls"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool windowControlsOnTheRight {
+            get {
+                return ((bool)(this["windowControlsOnTheRight"]));
+            }
+            set {
+                this["windowControlsOnTheRight"] = value;
+            }
+        }
     }
 }

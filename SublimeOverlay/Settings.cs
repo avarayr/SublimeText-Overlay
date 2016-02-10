@@ -14,6 +14,8 @@ namespace SublimeOverlay
         private int defaultOffsetX = 5;
         private int defaultOffsetY = 5;
         private int defaultRadius = 10;
+        private bool defaultReverseWindowControls = false;
+        private bool defaultWindowControlsOnTheRight = false;
         private Color defaultColor = Color.FromArgb(30, 30, 30);
         
         public Settings(MainForm form)
@@ -23,6 +25,8 @@ namespace SublimeOverlay
             offsetXTrack.Value = mainForm.OffsetX;
             offsetYTrack.Value = mainForm.OffsetY;
             showTitleCheckbox.Checked = mainForm.ShowTitle;
+            reverseWindowControls.Checked = mainForm.ReverseWindowControls;
+            windowControlsOnTheRight.Checked = mainForm.WindowControlsOnTheRight;
             colorPreview.BackColor = mainForm.CurrentColor;
         }
         private void AlterSize(int oX, int oY)
@@ -56,6 +60,8 @@ namespace SublimeOverlay
             Properties.Settings.Default.radius = borderRadiusTrack.Value = defaultRadius;
             AlterSize(defaultOffsetX, defaultOffsetY);
             Properties.Settings.Default.color = colorPreview.BackColor = mainForm.CurrentColor = defaultColor;
+            Properties.Settings.Default.reverseWindowControls = reverseWindowControls.Checked = defaultReverseWindowControls;
+            Properties.Settings.Default.windowControlsOnTheRight = windowControlsOnTheRight.Checked = defaultWindowControlsOnTheRight;
             mainForm.RefreshColor();
             mainForm.RefreshVisuals();
             SaveSettings();
@@ -85,7 +91,17 @@ namespace SublimeOverlay
                 SaveSettings();
             }
         }
-
+        private void reverseMinimizeCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.reverseWindowControls = mainForm.ReverseWindowControls = reverseWindowControls.Checked;
+            SaveSettings();
+        }
+        private void windowControlsOnTheRight_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.windowControlsOnTheRight = mainForm.WindowControlsOnTheRight = windowControlsOnTheRight.Checked;
+            mainForm.RefreshVisuals();
+            SaveSettings();
+        }
         private void Settings_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
@@ -123,6 +139,10 @@ namespace SublimeOverlay
             }
             return bitmap;
         }
+
+       
+
+        
 
         
 

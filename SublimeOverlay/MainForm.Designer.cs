@@ -40,12 +40,14 @@
             this.panelContainer = new System.Windows.Forms.Panel();
             this.titleWatcher = new System.Windows.Forms.Timer(this.components);
             this.titleTooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.windowControlsContainer = new System.Windows.Forms.Panel();
             this.titleBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.settingsButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.minimizeButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.maximizeButton)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.closeButton)).BeginInit();
             this.panelContainer.SuspendLayout();
+            this.windowControlsContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // container
@@ -64,11 +66,9 @@
             this.titleBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.titleBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(33)))), ((int)(((byte)(33)))));
+            this.titleBar.Controls.Add(this.windowControlsContainer);
             this.titleBar.Controls.Add(this.settingsButton);
             this.titleBar.Controls.Add(this.titleText);
-            this.titleBar.Controls.Add(this.minimizeButton);
-            this.titleBar.Controls.Add(this.maximizeButton);
-            this.titleBar.Controls.Add(this.closeButton);
             this.titleBar.Location = new System.Drawing.Point(0, 0);
             this.titleBar.Name = "titleBar";
             this.titleBar.Size = new System.Drawing.Size(937, 29);
@@ -109,7 +109,7 @@
             this.minimizeButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.minimizeButton.ErrorImage = global::SublimeOverlay.Properties.Resources.minimize;
             this.minimizeButton.Image = global::SublimeOverlay.Properties.Resources.minimize;
-            this.minimizeButton.Location = new System.Drawing.Point(51, 10);
+            this.minimizeButton.Location = new System.Drawing.Point(44, 5);
             this.minimizeButton.Name = "minimizeButton";
             this.minimizeButton.Size = new System.Drawing.Size(12, 12);
             this.minimizeButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -122,7 +122,7 @@
             this.maximizeButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.maximizeButton.ErrorImage = global::SublimeOverlay.Properties.Resources.maximize;
             this.maximizeButton.Image = global::SublimeOverlay.Properties.Resources.maximize;
-            this.maximizeButton.Location = new System.Drawing.Point(33, 10);
+            this.maximizeButton.Location = new System.Drawing.Point(26, 5);
             this.maximizeButton.Name = "maximizeButton";
             this.maximizeButton.Size = new System.Drawing.Size(12, 12);
             this.maximizeButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -135,7 +135,7 @@
             this.closeButton.Cursor = System.Windows.Forms.Cursors.Hand;
             this.closeButton.ErrorImage = global::SublimeOverlay.Properties.Resources.close;
             this.closeButton.Image = global::SublimeOverlay.Properties.Resources.close;
-            this.closeButton.Location = new System.Drawing.Point(15, 10);
+            this.closeButton.Location = new System.Drawing.Point(8, 5);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(12, 12);
             this.closeButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -170,6 +170,17 @@
             // 
             this.titleTooltip.AutomaticDelay = 1000;
             // 
+            // windowControlsContainer
+            // 
+            this.windowControlsContainer.BackColor = System.Drawing.Color.Transparent;
+            this.windowControlsContainer.Controls.Add(this.minimizeButton);
+            this.windowControlsContainer.Controls.Add(this.closeButton);
+            this.windowControlsContainer.Controls.Add(this.maximizeButton);
+            this.windowControlsContainer.Location = new System.Drawing.Point(12, 6);
+            this.windowControlsContainer.Name = "windowControlsContainer";
+            this.windowControlsContainer.Size = new System.Drawing.Size(62, 21);
+            this.windowControlsContainer.TabIndex = 5;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -193,6 +204,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.maximizeButton)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.closeButton)).EndInit();
             this.panelContainer.ResumeLayout(false);
+            this.windowControlsContainer.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -209,6 +221,7 @@
         private System.Windows.Forms.Timer titleWatcher;
         private System.Windows.Forms.ToolTip titleTooltip;
         private System.Windows.Forms.PictureBox settingsButton;
+        private System.Windows.Forms.Panel windowControlsContainer;
     }
 }
 

@@ -43,6 +43,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.borderRadiusTrack = new System.Windows.Forms.TrackBar();
             this.label4 = new System.Windows.Forms.Label();
+            this.reverseWindowControls = new System.Windows.Forms.CheckBox();
+            this.windowControlsOnTheRight = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.offsetXTrack)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.offsetYTrack)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -55,7 +57,7 @@
             this.offsetXTrack.Maximum = 35;
             this.offsetXTrack.Minimum = 1;
             this.offsetXTrack.Name = "offsetXTrack";
-            this.offsetXTrack.Size = new System.Drawing.Size(260, 45);
+            this.offsetXTrack.Size = new System.Drawing.Size(382, 45);
             this.offsetXTrack.TabIndex = 0;
             this.offsetXTrack.Value = 5;
             this.offsetXTrack.Scroll += new System.EventHandler(this.trackBar_Scroll);
@@ -84,18 +86,18 @@
             this.offsetYTrack.Maximum = 35;
             this.offsetYTrack.Minimum = 1;
             this.offsetYTrack.Name = "offsetYTrack";
-            this.offsetYTrack.Size = new System.Drawing.Size(260, 45);
+            this.offsetYTrack.Size = new System.Drawing.Size(382, 45);
             this.offsetYTrack.TabIndex = 2;
             this.offsetYTrack.Value = 5;
             this.offsetYTrack.Scroll += new System.EventHandler(this.trackBar_Scroll);
             // 
             // resetButton
             // 
-            this.resetButton.Location = new System.Drawing.Point(15, 297);
+            this.resetButton.Location = new System.Drawing.Point(15, 311);
             this.resetButton.Name = "resetButton";
-            this.resetButton.Size = new System.Drawing.Size(257, 33);
+            this.resetButton.Size = new System.Drawing.Size(379, 33);
             this.resetButton.TabIndex = 4;
-            this.resetButton.Text = "Reset";
+            this.resetButton.Text = "Reset Settings";
             this.resetButton.UseVisualStyleBackColor = true;
             this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
             // 
@@ -104,7 +106,7 @@
             this.showTitleCheckbox.AutoSize = true;
             this.showTitleCheckbox.Checked = true;
             this.showTitleCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.showTitleCheckbox.Location = new System.Drawing.Point(12, 198);
+            this.showTitleCheckbox.Location = new System.Drawing.Point(15, 182);
             this.showTitleCheckbox.Name = "showTitleCheckbox";
             this.showTitleCheckbox.Size = new System.Drawing.Size(76, 17);
             this.showTitleCheckbox.TabIndex = 5;
@@ -115,16 +117,16 @@
             // colorPreview
             // 
             this.colorPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.colorPreview.Location = new System.Drawing.Point(17, 16);
+            this.colorPreview.Location = new System.Drawing.Point(37, 16);
             this.colorPreview.Name = "colorPreview";
             this.colorPreview.Size = new System.Drawing.Size(29, 28);
             this.colorPreview.TabIndex = 6;
             // 
             // changeColorButton
             // 
-            this.changeColorButton.Location = new System.Drawing.Point(52, 19);
+            this.changeColorButton.Location = new System.Drawing.Point(93, 26);
             this.changeColorButton.Name = "changeColorButton";
-            this.changeColorButton.Size = new System.Drawing.Size(199, 23);
+            this.changeColorButton.Size = new System.Drawing.Size(280, 35);
             this.changeColorButton.TabIndex = 7;
             this.changeColorButton.Text = "Pick color";
             this.changeColorButton.UseVisualStyleBackColor = true;
@@ -133,7 +135,7 @@
             // button3
             // 
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F);
-            this.button3.Location = new System.Drawing.Point(7, 47);
+            this.button3.Location = new System.Drawing.Point(28, 47);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(46, 23);
             this.button3.TabIndex = 8;
@@ -146,9 +148,9 @@
             this.groupBox1.Controls.Add(this.changeColorButton);
             this.groupBox1.Controls.Add(this.button3);
             this.groupBox1.Controls.Add(this.colorPreview);
-            this.groupBox1.Location = new System.Drawing.Point(15, 218);
+            this.groupBox1.Location = new System.Drawing.Point(15, 232);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(257, 77);
+            this.groupBox1.Size = new System.Drawing.Size(379, 77);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Base Color";
@@ -168,7 +170,7 @@
             this.borderRadiusTrack.Maximum = 35;
             this.borderRadiusTrack.Minimum = 1;
             this.borderRadiusTrack.Name = "borderRadiusTrack";
-            this.borderRadiusTrack.Size = new System.Drawing.Size(260, 45);
+            this.borderRadiusTrack.Size = new System.Drawing.Size(382, 45);
             this.borderRadiusTrack.TabIndex = 10;
             this.borderRadiusTrack.Value = 10;
             this.borderRadiusTrack.Scroll += new System.EventHandler(this.borderRadiusTrack_Scroll);
@@ -176,18 +178,42 @@
             // label4
             // 
             this.label4.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label4.Location = new System.Drawing.Point(12, 333);
+            this.label4.Location = new System.Drawing.Point(12, 347);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(264, 81);
+            this.label4.Size = new System.Drawing.Size(382, 67);
             this.label4.TabIndex = 12;
             this.label4.Text = resources.GetString("label4.Text");
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // reverseWindowControls
+            // 
+            this.reverseWindowControls.AutoSize = true;
+            this.reverseWindowControls.Location = new System.Drawing.Point(15, 205);
+            this.reverseWindowControls.Name = "reverseWindowControls";
+            this.reverseWindowControls.Size = new System.Drawing.Size(200, 17);
+            this.reverseWindowControls.TabIndex = 13;
+            this.reverseWindowControls.Text = "Reverse minimize && maximize buttons";
+            this.reverseWindowControls.UseVisualStyleBackColor = true;
+            this.reverseWindowControls.CheckedChanged += new System.EventHandler(this.reverseMinimizeCheckbox_CheckedChanged);
+            // 
+            // windowControlsOnTheRight
+            // 
+            this.windowControlsOnTheRight.AutoSize = true;
+            this.windowControlsOnTheRight.Location = new System.Drawing.Point(233, 182);
+            this.windowControlsOnTheRight.Name = "windowControlsOnTheRight";
+            this.windowControlsOnTheRight.Size = new System.Drawing.Size(161, 17);
+            this.windowControlsOnTheRight.TabIndex = 14;
+            this.windowControlsOnTheRight.Text = "Window controls on the right";
+            this.windowControlsOnTheRight.UseVisualStyleBackColor = true;
+            this.windowControlsOnTheRight.CheckedChanged += new System.EventHandler(this.windowControlsOnTheRight_CheckedChanged);
             // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(288, 423);
+            this.ClientSize = new System.Drawing.Size(414, 423);
+            this.Controls.Add(this.windowControlsOnTheRight);
+            this.Controls.Add(this.reverseWindowControls);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.borderRadiusTrack);
@@ -229,5 +255,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TrackBar borderRadiusTrack;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox reverseWindowControls;
+        private System.Windows.Forms.CheckBox windowControlsOnTheRight;
     }
 }

@@ -20,6 +20,8 @@ namespace SublimeOverlay
         private static int oY = Properties.Settings.Default.offsetY;
         private static bool showTitle = Properties.Settings.Default.showTitle;
         private static Color currentColor = Properties.Settings.Default.color;
+        private static bool reverseWindowControls = Properties.Settings.Default.reverseWindowControls;
+        private static bool windowControlsOnTheRight = Properties.Settings.Default.windowControlsOnTheRight;
         private Settings settingsWindow;
         private bool preventForceFocus = false;
         public MainForm()
@@ -90,6 +92,7 @@ namespace SublimeOverlay
             this.panelContainer.Padding = new Padding(OffsetX, OffsetY, OffsetX, OffsetY);
             radius = Properties.Settings.Default.radius;
             Region = RoundRegion(Width, Height, radius);
+            MoveWindowControls(WindowControlsOnTheRight ? WindowControlPosition.Right : WindowControlPosition.Left, WindowControlsOnTheRight);
         }
         
         private void DockWindow()
@@ -120,6 +123,40 @@ namespace SublimeOverlay
         {
             titleWatcher.Stop();
             titleText.Hide();
+        }
+        // Needs optimization
+        private void MoveWindowControls(WindowControlPosition position, bool switchButtonPositions)
+        {
+            switch (position)
+            {
+                case WindowControlPosition.Right:
+                    windowControlsContainer.Location = new Point(titleBar.Width - 77, windowControlsContainer.Location.Y);
+                    windowControlsContainer.Anchor = AnchorStyles.Right | AnchorStyles.Top;
+                    settingsButton.Location = new Point(20, 0);
+                    settingsButton.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+                    // detect if currently close and minimize buttons are switched
+                    if (closeButton.Location.X < minimizeButton.Location.X)
+                    {
+                        int closeButtonLocationX = closeButton.Location.X;
+                        int minimizeButtonLocationX = minimizeButton.Location.X;
+                        closeButton.Location = new Point(minimizeButtonLocationX, closeButton.Location.Y);
+                        minimizeButton.Location = new Point(closeButtonLocationX, closeButton.Location.Y);
+                    }
+                    break;
+                case WindowControlPosition.Left:
+                    windowControlsContainer.Location = new Point(12, windowControlsContainer.Location.Y);
+                    windowControlsContainer.Anchor = AnchorStyles.Left | AnchorStyles.Top;
+                    settingsButton.Location = new Point(titleBar.Width - 49, 0);
+                    settingsButton.Anchor = AnchorStyles.Right | AnchorStyles.Top;
+                    if (closeButton.Location.X > minimizeButton.Location.X)
+                    {
+                        int closeButtonLocationX = closeButton.Location.X;
+                        int minimizeButtonLocationX = minimizeButton.Location.X;
+                        closeButton.Location = new Point(minimizeButtonLocationX, closeButton.Location.Y);
+                        minimizeButton.Location = new Point(closeButtonLocationX, closeButton.Location.Y);
+                    }
+                    break;
+            }
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -236,9 +273,15 @@ namespace SublimeOverlay
 
         private void maximizeButton_Click(object sender, EventArgs e)
         {
-            Maximize();
+            if (ReverseWindowControls)
+                Minimize();
+            else
+                Maximize();
         }
-
+        private void Minimize()
+        {
+            WindowState = FormWindowState.Minimized;
+        }
         private void Maximize()
         {
             if (WindowState == FormWindowState.Maximized)
@@ -258,7 +301,10 @@ namespace SublimeOverlay
         }
         private void minimizeButton_Click(object sender, EventArgs e)
         {
-            WindowState = FormWindowState.Minimized;
+            if (ReverseWindowControls)
+                Maximize();
+            else
+                Minimize();
         }
 
         private void titleBar_DoubleClick(object sender, EventArgs e)
@@ -440,7 +486,10 @@ namespace SublimeOverlay
             {
                 return oY;
             }
-            set { oY = value; }
+            set 
+            {
+                oY = value;
+            }
         }
         public bool ShowTitle
         {
@@ -464,8 +513,34 @@ namespace SublimeOverlay
                 currentColor = value;
             }
         }
+        public bool ReverseWindowControls
+        {
+            get
+            {
+                return reverseWindowControls;
+            }
+            set
+            {
+                reverseWindowControls = value;
+            }
+        }
+        public bool WindowControlsOnTheRight
+        {
+            get
+            {
+                return windowControlsOnTheRight;
+            }
+            set
+            {
+                windowControlsOnTheRight = value;
+            }
+        }
 
-        
+        enum WindowControlPosition
+        {
+            Left, 
+            Right
+        }
 
         
         
