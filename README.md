@@ -29,6 +29,15 @@ Open an instance of Sublime Text and run the executable of SublimeOverlay.
 
  Currently supports only 1 instance of editor. 
 
+## Auto run editor on application startup
+* Create a shortcut and pass the following arguments
+  * ```--startsublime``` - most likely it will automatically find your sublime path and run it.
+  * ```--sublime-path``` - Use this in case of application not detecting your Sublime installation path
+
+_Always use quotes for_ ```--sublime-path```
+
+Example arguments: ```--startsublime --sublime-path="C:\MySublime\sublime_text.exe"```
+
 ------
 # FAQ: 
 
