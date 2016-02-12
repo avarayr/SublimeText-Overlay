@@ -24,13 +24,19 @@ namespace SublimeOverlay
         private static bool windowControlsOnTheRight = Properties.Settings.Default.windowControlsOnTheRight;
         private Settings settingsWindow;
         private bool preventForceFocus = false;
+        
+        
         public MainForm()
         {
             InitializeComponent();
             Region = RoundRegion(Width, Height, radius);
             settingsWindow = new Settings(this);
             this.GotFocus += MainForm_GotFocus;
-            
+        }
+
+        void MainForm_ChildMinimized()
+        {
+            throw new NotImplementedException();
         }
         private bool isWindowActive(IntPtr hWnd)
         {
@@ -97,7 +103,6 @@ namespace SublimeOverlay
         
         private void DockWindow()
         {
-
             pDocked = Process.GetProcesses().Where<Process>(s => s.MainWindowTitle.Contains("Sublime Text") && Path.GetFileNameWithoutExtension(s.MainModule.FileName) == "sublime_text").FirstOrDefault();
             if (pDocked == null)
             {
@@ -160,11 +165,16 @@ namespace SublimeOverlay
         }
         private void MainForm_Load(object sender, EventArgs e)
         {
-            
+            ParseArgs();
+            Initialize();
+        }
+
+        private void ParseArgs()
+        {
             string[] args = Environment.GetCommandLineArgs();
             if (args.Length > 1)
             {
-                var pathQuery = args.Skip(1).Where( arg => arg.StartsWith("--sublime-path="));
+                var pathQuery = args.Skip(1).Where(arg => arg.StartsWith("--sublime-path="));
                 string path = "";
                 if (pathQuery.Count() != 0)
                 {
@@ -175,7 +185,7 @@ namespace SublimeOverlay
                         Application.Exit();
                         return;
                     }
-                    path = parts.Last().Replace("\"","");
+                    path = parts.Last().Replace("\"", "");
                 }
                 if (args.Where(arg => arg.Contains("--startsublime")).Count() != 0)
                 {
@@ -187,7 +197,7 @@ namespace SublimeOverlay
                             return;
                         }
                     }
-                    catch (SecurityException exception)
+                    catch (SecurityException)
                     {
                         MessageBox.Show("You need to run this app as administrator to start editor automatically!", "I need administrator rights", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         Application.Exit();
@@ -195,12 +205,26 @@ namespace SublimeOverlay
                     }
                 }
             }
+        }
+
+        private void Initialize()
+        {
             if (!ShowTitle)
                 HideTitle();
             RefreshColor();
             DockWindow();
             FitToWindow();
             RefreshVisuals();
+            HookChildTracker();
+        }
+
+        private void HookChildTracker()
+        {
+            ChildTracker.Hook(pDocked.MainWindowHandle);
+            ChildTracker.ChildMinimized += (() =>
+            {
+                this.WindowState = FormWindowState.Minimized;
+            });
         }
         private bool IsAdministrator()
         {
@@ -465,6 +489,7 @@ namespace SublimeOverlay
         {
             try
             {
+                ChildTracker.Unhook();
                 pDocked.CloseMainWindow();
             }
             catch { }

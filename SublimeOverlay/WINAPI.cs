@@ -9,12 +9,39 @@ namespace SublimeOverlay
 {
     class NativeMethods
     {
+        [StructLayout(LayoutKind.Sequential)]
+        public struct WINDOWPLACEMENT
+        {
+            public int length;
+            public int flags;
+            public int showCmd;
+            public System.Drawing.Point ptMinPosition;
+            public System.Drawing.Point ptMaxPosition;
+            public System.Drawing.Rectangle rcNormalPosition;
+        }
+        public delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType,
+        IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
+        [DllImport("user32.dll")]
+        public static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax, IntPtr
+           hmodWinEventProc, WinEventDelegate lpfnWinEventProc, uint idProcess,
+           uint idThread, uint dwFlags);
+
+        [DllImport("user32.dll")]
+        public static extern bool UnhookWinEvent(IntPtr hWinEventHook);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
         public const int AW_HIDE = 0X10000;
         public const int AW_ACTIVATE = 0X20000;
         public const int AW_HOR_POSITIVE = 0X1;
         public const int AW_HOR_NEGATIVE = 0X2;
         public const int AW_SLIDE = 0X40000;
         public const int AW_BLEND = 0X80000;
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetWindowPlacement(IntPtr hWnd,
+           [In] ref WINDOWPLACEMENT lpwndpl);
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern int AnimateWindow (IntPtr hWnd, int dwTime, int dwFlags);
         public const int WM_NCLBUTTONDOWN = 0xA1;
@@ -29,7 +56,7 @@ namespace SublimeOverlay
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern int GetWindowText(HandleRef hWnd, StringBuilder lpString, int nMaxCount);
         [DllImportAttribute("user32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, uint wMsg, UIntPtr wParam, IntPtr lParam);
+        public static extern IntPtr SendMessage(IntPtr hWnd, uint wMsg, UIntPtr wParam, IntPtr lParam);
         [DllImportAttribute("user32.dll")]
         public static extern bool ReleaseCapture();
         [DllImport("user32.dll")]
