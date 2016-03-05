@@ -32,12 +32,9 @@ namespace SublimeOverlay
             Region = RoundRegion(Width, Height, radius);
             settingsWindow = new Settings(this);
             this.GotFocus += MainForm_GotFocus;
+            this.MaximumSize = Screen.PrimaryScreen.WorkingArea.Size;
         }
 
-        void MainForm_ChildMinimized()
-        {
-            throw new NotImplementedException();
-        }
         private bool isWindowActive(IntPtr hWnd)
         {
             return NativeMethods.GetForegroundWindow() == hWnd;
