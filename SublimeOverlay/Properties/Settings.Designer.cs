@@ -106,5 +106,29 @@ namespace SublimeOverlay.Properties {
                 this["windowControlsOnTheRight"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("400, 300")]
+        public global::System.Drawing.Size lastWindowSize {
+            get {
+                return ((global::System.Drawing.Size)(this["lastWindowSize"]));
+            }
+            set {
+                this["lastWindowSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20, 20")]
+        public global::System.Drawing.Point lastWindowPosition {
+            get {
+                return ((global::System.Drawing.Point)(this["lastWindowPosition"]));
+            }
+            set {
+                this["lastWindowPosition"] = value;
+            }
+        }
     }
 }

@@ -23,5 +23,11 @@
     <Setting Name="windowControlsOnTheRight" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="lastWindowSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">400, 300</Value>
+    </Setting>
+    <Setting Name="lastWindowPosition" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">20, 20</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

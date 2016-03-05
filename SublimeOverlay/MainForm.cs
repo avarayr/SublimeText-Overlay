@@ -32,7 +32,7 @@ namespace SublimeOverlay
             Region = RoundRegion(Width, Height, radius);
             settingsWindow = new Settings(this);
             this.GotFocus += MainForm_GotFocus;
-            this.MaximumSize = Screen.PrimaryScreen.WorkingArea.Size;
+            this.MaximumSize = Screen.FromControl(this).WorkingArea.Size;
         }
 
         private bool isWindowActive(IntPtr hWnd)
@@ -115,6 +115,7 @@ namespace SublimeOverlay
             ChildTracker.RestoreWindow(pDocked.MainWindowHandle);
             HideTitleBar(pDocked.MainWindowHandle);
             NativeMethods.SetWindowLong(pDocked.MainWindowHandle, -8 /* OWNER */, (int)container.Handle);
+            RestorePreviousSize();
             FitToWindow();
             InvalidateWindow(pDocked.MainWindowHandle);
             NativeMethods.SendMessage(pDocked.MainWindowHandle, (uint)0x000F /* WMPAINT */, UIntPtr.Zero, IntPtr.Zero);
@@ -172,6 +173,7 @@ namespace SublimeOverlay
         }
         private void editor_Exited(object sender, EventArgs e)
         {
+            MainForm_FormClosed(null, null); // fire the formclosed event
             Environment.Exit(0);
         }
         private void ParseArgs()
@@ -327,13 +329,20 @@ namespace SublimeOverlay
             }
             else
             {
-                Region = RoundRegion(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height, 0);
+                Region = RoundRegion(Screen.FromControl(this).Bounds.Width, Screen.FromControl(this).Bounds.Height, 0);
                 WindowState = FormWindowState.Maximized;
             }
         }
         private Region RoundRegion(int width, int height, int radius)
         {
             return System.Drawing.Region.FromHrgn(NativeMethods.CreateRoundRectRgn(0, 0, width, height, radius, radius)); 
+        }
+        private void RestorePreviousSize()
+        {
+            Size previousSize = Properties.Settings.Default.lastWindowSize;
+            Point previousPosition = Properties.Settings.Default.lastWindowPosition;
+            this.Size = previousSize;
+            this.Location = previousPosition;
         }
         private void minimizeButton_Click(object sender, EventArgs e)
         {
@@ -501,10 +510,17 @@ namespace SublimeOverlay
         {
             try
             {
+                SetRestoreSize();
                 ChildTracker.Unhook();
-                pDocked.CloseMainWindow();
             }
             catch { }
+        }
+
+        private void SetRestoreSize()
+        {
+            Properties.Settings.Default.lastWindowSize = Size;
+            Properties.Settings.Default.lastWindowPosition = Location;
+            Properties.Settings.Default.Save();
         }
         private void MainForm_Move(object sender, EventArgs e)
         {
