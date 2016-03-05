@@ -1,9 +1,0 @@
-c:\users\mika\documents\visual studio 2013\Projects\SublimeOverlay\SublimeOverlay\bin\Debug\SublimeOverlay.exe.config
-c:\users\mika\documents\visual studio 2013\Projects\SublimeOverlay\SublimeOverlay\bin\Debug\SublimeOverlay.exe
-c:\users\mika\documents\visual studio 2013\Projects\SublimeOverlay\SublimeOverlay\bin\Debug\SublimeOverlay.pdb
-c:\users\mika\documents\visual studio 2013\Projects\SublimeOverlay\SublimeOverlay\obj\Debug\SublimeOverlay.Properties.Resources.resources
-c:\users\mika\documents\visual studio 2013\Projects\SublimeOverlay\SublimeOverlay\obj\Debug\SublimeOverlay.csproj.GenerateResource.Cache
-c:\users\mika\documents\visual studio 2013\Projects\SublimeOverlay\SublimeOverlay\obj\Debug\SublimeOverlay.exe
-c:\users\mika\documents\visual studio 2013\Projects\SublimeOverlay\SublimeOverlay\obj\Debug\SublimeOverlay.pdb
-C:\Users\Mika\documents\visual studio 2013\Projects\SublimeOverlay\SublimeOverlay\obj\Debug\SublimeOverlay.Settings.resources
-C:\Users\Mika\Documents\Visual Studio 2013\Projects\SublimeOverlay\SublimeOverlay\obj\Debug\SublimeOverlay.MainForm.resources

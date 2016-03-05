@@ -110,12 +110,17 @@ namespace SublimeOverlay
                     Application.Exit();
                 return;
             }
+            pDocked.EnableRaisingEvents = true;
+            pDocked.Exited += editor_Exited;
+            ChildTracker.RestoreWindow(pDocked.MainWindowHandle);
             HideTitleBar(pDocked.MainWindowHandle);
             NativeMethods.SetWindowLong(pDocked.MainWindowHandle, -8 /* OWNER */, (int)container.Handle);
+            FitToWindow();
             InvalidateWindow(pDocked.MainWindowHandle);
             NativeMethods.SendMessage(pDocked.MainWindowHandle, (uint)0x000F /* WMPAINT */, UIntPtr.Zero, IntPtr.Zero);
-            FitToWindow();
         }
+
+        
         public void ToggleTitle()
         {
             titleWatcher.Enabled = !titleWatcher.Enabled;
@@ -165,7 +170,10 @@ namespace SublimeOverlay
             ParseArgs();
             Initialize();
         }
-
+        private void editor_Exited(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
         private void ParseArgs()
         {
             string[] args = Environment.GetCommandLineArgs();
@@ -289,7 +297,14 @@ namespace SublimeOverlay
 
         private void closeButton_Click(object sender, EventArgs e)
         {
-            Close();
+            if (pDocked != null)
+            {
+                pDocked.CloseMainWindow();
+            }
+            else
+            {
+                Environment.Exit(0);
+            }
         }
 
         private void maximizeButton_Click(object sender, EventArgs e)

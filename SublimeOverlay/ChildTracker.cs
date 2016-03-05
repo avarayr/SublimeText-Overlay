@@ -35,11 +35,15 @@ namespace SublimeOverlay
             {
                 return;
             }
+            RestoreWindow(hwnd);
+            ChildMinimized();
+        }
+        public static void RestoreWindow(IntPtr hwnd)
+        {
             NativeMethods.WINDOWPLACEMENT windowPlacement = new NativeMethods.WINDOWPLACEMENT();
             NativeMethods.GetWindowPlacement(hwnd, ref windowPlacement);
             windowPlacement.showCmd = 9; /* SW_RESTORE */
             NativeMethods.SetWindowPlacement(hwnd, ref windowPlacement);
-            ChildMinimized();
         }
     }
 }
