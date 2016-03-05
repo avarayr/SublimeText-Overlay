@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
 
 namespace SublimeOverlay
 {
@@ -15,7 +12,7 @@ namespace SublimeOverlay
 
         const uint EVENT_SYSTEM_MINIMIZESTART = 0x0016;
         const uint WINEVENT_OUTOFCONTEXT = 0;
-        static NativeMethods.WinEventDelegate procDelegate = new NativeMethods.WinEventDelegate(WinEventProc);
+        static readonly NativeMethods.WinEventDelegate procDelegate = new NativeMethods.WinEventDelegate(WinEventProc);
 
         public static void Hook(IntPtr hWnd)
         {
@@ -36,7 +33,7 @@ namespace SublimeOverlay
                 return;
             }
             RestoreWindow(hwnd);
-            ChildMinimized();
+            if (ChildMinimized != null) ChildMinimized();
         }
         public static void RestoreWindow(IntPtr hwnd)
         {

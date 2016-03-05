@@ -1,8 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace SublimeOverlay
@@ -13,13 +10,13 @@ namespace SublimeOverlay
         private int defaultOffsetX = 5;
         private int defaultOffsetY = 5;
         private int defaultRadius = 10;
-        private bool defaultReverseWindowControls = false;
-        private bool defaultWindowControlsOnTheRight = false;
-        private Color defaultColor = Color.FromArgb(30, 30, 30);
+        private readonly bool defaultReverseWindowControls = false;
+        private readonly bool defaultWindowControlsOnTheRight = false;
+        private readonly Color defaultColor = Color.FromArgb(30, 30, 30);
         
         public Settings(MainForm form)
         {
-            this.mainForm = form;
+            mainForm = form;
             InitializeComponent();
             offsetXTrack.Value = mainForm.OffsetX;
             offsetYTrack.Value = mainForm.OffsetY;
@@ -52,7 +49,7 @@ namespace SublimeOverlay
 
         private void resetButton_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Saved settings will be overwritten to defaults. Do you like to continue?", "Reset settings", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            if (MessageBox.Show(@"Saved settings will be overwritten to defaults. Do you like to continue?", @"Reset settings", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
             Properties.Settings.Default.offsetX = offsetXTrack.Value = defaultOffsetX;
             Properties.Settings.Default.offsetY = offsetYTrack.Value = defaultOffsetY;
@@ -104,12 +101,12 @@ namespace SublimeOverlay
         private void Settings_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
-            this.Hide();
+            Hide();
         }
 
         private void autoColor_Click(object sender, EventArgs e)
         {
-            this.Hide();
+            Hide();
             mainForm.Focus();
             Point lastLocation = mainForm.Location;
             mainForm.Location = new Point((Screen.PrimaryScreen.WorkingArea.Width - mainForm.Width) / 2,
@@ -118,14 +115,14 @@ namespace SublimeOverlay
             Color sideBarColor = formShot.GetPixel(10, (int)Math.Floor((double)mainForm.Height / 2));
             if (sideBarColor == Color.FromArgb(0, 0, 0, 0))
             {
-                MessageBox.Show("Unable to detect the color. Please place the editor in the visible area of the screen and try again", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                this.Show();
+                MessageBox.Show(@"Unable to detect the color. Please place the editor in the visible area of the screen and try again", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Show();
                 return;
             }
             ApplyColor(sideBarColor);
             mainForm.Location = lastLocation;
-            this.Show();
-            this.Focus();
+            Show();
+            Focus();
             SaveSettings();
         }
         private Bitmap ScreenshotForm(Form form)
