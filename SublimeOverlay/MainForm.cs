@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace SublimeOverlay
 {
-    public partial class MainForm : Form
+    public sealed partial class MainForm : Form
     {
         private int _radius = Properties.Settings.Default.radius;
         private static int _oX = Properties.Settings.Default.offsetX;
@@ -21,6 +21,7 @@ namespace SublimeOverlay
         private static Color _currentColor = Properties.Settings.Default.color;
         private static bool _reverseWindowControls = Properties.Settings.Default.reverseWindowControls;
         private static bool _windowControlsOnTheRight = Properties.Settings.Default.windowControlsOnTheRight;
+        private bool _triggerExit = true;
         private readonly Settings _settingsWindow;
         private bool _preventForceFocus;
         
@@ -172,8 +173,25 @@ namespace SublimeOverlay
         }
         private void editor_Exited(object sender, EventArgs e)
         {
-            MainForm_FormClosed(null, null); // fire the formclosed event
+            _triggerExit = false;
+            SetRestoreSize();
+            ChildTracker.Unhook();
             Environment.Exit(0);
+        }
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                if (_triggerExit) // if instance is closed from taskbar
+                {
+                    pDocked.CloseMainWindow(); // close editor and wait till it closed
+                    e.Cancel = true; 
+                }
+            }
+            catch
+            {
+                // ignored
+            }
         }
         private void ParseArgs()
         {
@@ -296,6 +314,7 @@ namespace SublimeOverlay
 
         private void closeButton_Click(object sender, EventArgs e)
         {
+            _triggerExit = false;
             if (pDocked != null)
             {
                 pDocked.CloseMainWindow();
@@ -503,18 +522,7 @@ namespace SublimeOverlay
         {
             _settingsWindow.Show();
         }
-        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            try
-            {
-                SetRestoreSize();
-                ChildTracker.Unhook();
-            }
-            catch
-            {
-                // ignored
-            }
-        }
+        
 
         private void SetRestoreSize()
         {
@@ -599,6 +607,7 @@ namespace SublimeOverlay
             Right
         }
 
+        
         
 
         
