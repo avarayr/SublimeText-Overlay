@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -15,24 +14,24 @@ namespace SublimeOverlay
 {
     public partial class MainForm : Form
     {
-        private int radius = Properties.Settings.Default.radius;
-        private static int oX = Properties.Settings.Default.offsetX;
-        private static int oY = Properties.Settings.Default.offsetY;
-        private static bool showTitle = Properties.Settings.Default.showTitle;
-        private static Color currentColor = Properties.Settings.Default.color;
-        private static bool reverseWindowControls = Properties.Settings.Default.reverseWindowControls;
-        private static bool windowControlsOnTheRight = Properties.Settings.Default.windowControlsOnTheRight;
-        private Settings settingsWindow;
-        private bool preventForceFocus = false;
+        private int _radius = Properties.Settings.Default.radius;
+        private static int _oX = Properties.Settings.Default.offsetX;
+        private static int _oY = Properties.Settings.Default.offsetY;
+        private static bool _showTitle = Properties.Settings.Default.showTitle;
+        private static Color _currentColor = Properties.Settings.Default.color;
+        private static bool _reverseWindowControls = Properties.Settings.Default.reverseWindowControls;
+        private static bool _windowControlsOnTheRight = Properties.Settings.Default.windowControlsOnTheRight;
+        private readonly Settings _settingsWindow;
+        private bool _preventForceFocus;
         
         
         public MainForm()
         {
             InitializeComponent();
-            Region = RoundRegion(Width, Height, radius);
-            settingsWindow = new Settings(this);
-            this.GotFocus += MainForm_GotFocus;
-            this.MaximumSize = Screen.FromControl(this).WorkingArea.Size;
+            Region = RoundRegion(Width, Height, _radius);
+            _settingsWindow = new Settings(this);
+            GotFocus += MainForm_GotFocus;
+            MaximumSize = Screen.FromControl(this).WorkingArea.Size;
         }
 
         private bool isWindowActive(IntPtr hWnd)
@@ -42,7 +41,7 @@ namespace SublimeOverlay
         private void MainForm_GotFocus(object sender, EventArgs e)
         {
             if (!titleBar.Bounds.Contains(PointToClient(MousePosition)) &&
-                !preventForceFocus &&
+                !_preventForceFocus &&
                 !isWindowActive(pDocked.MainWindowHandle))
             {
                 NativeMethods.SetForegroundWindow(pDocked.MainWindowHandle);
@@ -52,18 +51,18 @@ namespace SublimeOverlay
         {
             get
             {
-                const int CS_DROPSHADOW = 0x20000;
-                const int WS_MINIMIZEBOX = 0x20000;
-                const int CS_DBLCLKS = 0x8;
+                const int csDropshadow = 0x20000;
+                const int wsMinimizebox = 0x20000;
+                const int csDblclks = 0x8;
                 CreateParams cp = base.CreateParams;
-                cp.ClassStyle |= CS_DROPSHADOW;
-                cp.Style |= WS_MINIMIZEBOX;
-                cp.ClassStyle |= CS_DBLCLKS;
+                cp.ClassStyle |= csDropshadow;
+                cp.Style |= wsMinimizebox;
+                cp.ClassStyle |= csDblclks;
                 return cp;
             }
         }
         private Process pDocked;
-        Point ResizeLocation = Point.Empty;
+        Point _resizeLocation = Point.Empty;
 
         private string GetTitleText(IntPtr hWnd)
         {
@@ -92,18 +91,18 @@ namespace SublimeOverlay
         }
         public void RefreshVisuals()
         {
-            this.panelContainer.Padding = new Padding(OffsetX, OffsetY, OffsetX, OffsetY);
-            radius = Properties.Settings.Default.radius;
-            Region = RoundRegion(Width, Height, radius);
-            MoveWindowControls(WindowControlsOnTheRight ? WindowControlPosition.Right : WindowControlPosition.Left, WindowControlsOnTheRight);
+            panelContainer.Padding = new Padding(OffsetX, OffsetY, OffsetX, OffsetY);
+            _radius = Properties.Settings.Default.radius;
+            Region = RoundRegion(Width, Height, _radius);
+            MoveWindowControls(WindowControlsOnTheRight ? WindowControlPosition.Right : WindowControlPosition.Left);
         }
         
         private void DockWindow()
         {
-            pDocked = Process.GetProcesses().Where<Process>(s => s.MainWindowTitle.Contains("Sublime Text") && Path.GetFileNameWithoutExtension(s.MainModule.FileName) == "sublime_text").FirstOrDefault();
+            pDocked = Process.GetProcesses().FirstOrDefault(s => s.MainWindowTitle.Contains(@"Sublime Text") && Path.GetFileNameWithoutExtension(s.MainModule.FileName) == "sublime_text");
             if (pDocked == null)
             {
-                DialogResult answer = MessageBox.Show("Please launch Sublime and click Retry", "Launch the editor", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning);
+                DialogResult answer = MessageBox.Show(@"Please launch Sublime and click Retry", @"Launch the editor", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning);
                 if (answer == DialogResult.Retry)
                     DockWindow();
                 else
@@ -118,7 +117,7 @@ namespace SublimeOverlay
             RestorePreviousSize();
             FitToWindow();
             InvalidateWindow(pDocked.MainWindowHandle);
-            NativeMethods.SendMessage(pDocked.MainWindowHandle, (uint)0x000F /* WMPAINT */, UIntPtr.Zero, IntPtr.Zero);
+            NativeMethods.SendMessage(pDocked.MainWindowHandle, 0x000F /* WMPAINT */, UIntPtr.Zero, IntPtr.Zero);
         }
 
         
@@ -133,7 +132,7 @@ namespace SublimeOverlay
             titleText.Hide();
         }
         // Needs optimization
-        private void MoveWindowControls(WindowControlPosition position, bool switchButtonPositions)
+        private void MoveWindowControls(WindowControlPosition position)
         {
             switch (position)
             {
@@ -183,33 +182,30 @@ namespace SublimeOverlay
             {
                 var pathQuery = args.Skip(1).Where(arg => arg.StartsWith("--sublime-path="));
                 string path = "";
-                if (pathQuery.Count() != 0)
+                var query = pathQuery as string[] ?? pathQuery.ToArray();
+                if (query.Length != 0)
                 {
-                    string[] parts = pathQuery.First().Split('=');
+                    string[] parts = query.First().Split('=');
                     if (parts.Length != 2)
                     {
-                        MessageBox.Show("Please specify correct editor path.");
+                        MessageBox.Show(@"Please specify correct editor path.");
                         Application.Exit();
                         return;
                     }
                     path = parts.Last().Replace("\"", "");
                 }
-                if (args.Where(arg => arg.Contains("--startsublime")).Count() != 0)
+                if (args.Count(arg => arg.Contains("--startsublime")) == 0) return;
+                try
                 {
-                    try
+                    if (!RunSublime(path))
                     {
-                        if (!RunSublime(path))
-                        {
-                            Application.Exit();
-                            return;
-                        }
-                    }
-                    catch (SecurityException)
-                    {
-                        MessageBox.Show("You need to run this app as administrator to start editor automatically!", "I need administrator rights", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         Application.Exit();
-                        return;
                     }
+                }
+                catch (SecurityException)
+                {
+                    MessageBox.Show(@"You need to run this app as administrator to start editor automatically!", @"I need administrator rights", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
                 }
             }
         }
@@ -230,9 +226,10 @@ namespace SublimeOverlay
             ChildTracker.Hook(pDocked.MainWindowHandle);
             ChildTracker.ChildMinimized += (() =>
             {
-                this.WindowState = FormWindowState.Minimized;
+                WindowState = FormWindowState.Minimized;
             });
         }
+
         private bool IsAdministrator()
         {
             return (new WindowsPrincipal(WindowsIdentity.GetCurrent()))
@@ -256,7 +253,7 @@ namespace SublimeOverlay
                 }
                 else
                 {
-                    MessageBox.Show("No sublime executables found. Please specify it manually by passing the argument --sublime-path=\"FULL_PATH_TO_EDITOR\" (with quotes)", "No Sublime Text executable found", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(@"No sublime executables found. Please specify it manually by passing the argument --sublime-path=""FULL_PATH_TO_EDITOR"" (with quotes)", @"No Sublime Text executable found", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
             }
@@ -270,10 +267,10 @@ namespace SublimeOverlay
                     Thread.Sleep(1000);
                     if (++tries == maxTries)
                     {
-                        MessageBox.Show("Sublime is not starting so far. Please manually kill it from processes and try again!");
+                        MessageBox.Show(@"Sublime is not starting so far. Please manually kill it from processes and try again!");
                         return false;
                     }
-                } while (!editor.MainWindowTitle.Contains("Sublime Text"));
+                } while (editor != null && !editor.MainWindowTitle.Contains("Sublime Text"));
                 return true;
             }
 
@@ -325,7 +322,7 @@ namespace SublimeOverlay
             if (WindowState == FormWindowState.Maximized)
             {
                 WindowState = FormWindowState.Normal;
-                Region = RoundRegion(Width, Height, radius);
+                Region = RoundRegion(Width, Height, _radius);
             }
             else
             {
@@ -333,16 +330,16 @@ namespace SublimeOverlay
                 WindowState = FormWindowState.Maximized;
             }
         }
-        private Region RoundRegion(int width, int height, int radius)
+        private Region RoundRegion(int width, int height, int wRadius)
         {
-            return System.Drawing.Region.FromHrgn(NativeMethods.CreateRoundRectRgn(0, 0, width, height, radius, radius)); 
+            return Region.FromHrgn(NativeMethods.CreateRoundRectRgn(0, 0, width, height, wRadius, wRadius)); 
         }
         private void RestorePreviousSize()
         {
             Size previousSize = Properties.Settings.Default.lastWindowSize;
             Point previousPosition = Properties.Settings.Default.lastWindowPosition;
-            this.Size = previousSize;
-            this.Location = previousPosition;
+            Size = previousSize;
+            Location = previousPosition;
         }
         private void minimizeButton_Click(object sender, EventArgs e)
         {
@@ -375,49 +372,49 @@ namespace SublimeOverlay
                 int y = (int)((m.LParam.ToInt64() & 0xFFFF0000) >> 16);
                 Point pt = PointToClient(new Point(x, y));
                 Size clientSize = ClientSize;
-                ///allow resize on the lower right corner
+                //allow resize on the lower right corner
                 if (pt.X >= clientSize.Width - 16 && pt.Y >= clientSize.Height - 16 && clientSize.Height >= 16)
                 {
                     m.Result = (IntPtr)(IsMirrored ? htBottomLeft : htBottomRight);
                     return;
                 }
-                ///allow resize on the lower left corner
+                //allow resize on the lower left corner
                 if (pt.X <= 16 && pt.Y >= clientSize.Height - 16 && clientSize.Height >= 16)
                 {
                     m.Result = (IntPtr)(IsMirrored ? htBottomRight : htBottomLeft);
                     return;
                 }
-                ///allow resize on the upper right corner
+                //allow resize on the upper right corner
                 if (pt.X <= 16 && pt.Y <= 16 && clientSize.Height >= 16)
                 {
                     m.Result = (IntPtr)(IsMirrored ? htTopRight : htTopLeft);
                     return;
                 }
-                ///allow resize on the upper left corner
+                //allow resize on the upper left corner
                 if (pt.X >= clientSize.Width - 16 && pt.Y <= 16 && clientSize.Height >= 16)
                 {
                     m.Result = (IntPtr)(IsMirrored ? htTopLeft : htTopRight);
                     return;
                 }
-                ///allow resize on the top border
+                //allow resize on the top border
                 if (pt.Y <= 16 && clientSize.Height >= 16)
                 {
                     m.Result = (IntPtr)(htTop);
                     return;
                 }
-                ///allow resize on the bottom border
+                //allow resize on the bottom border
                 if (pt.Y >= clientSize.Height - 16 && clientSize.Height >= 16)
                 {
                     m.Result = (IntPtr)(htBottom);
                     return;
                 }
-                ///allow resize on the left border
+                //allow resize on the left border
                 if (pt.X <= 16 && clientSize.Height >= 16)
                 {
                     m.Result = (IntPtr)(htLeft);
                     return;
                 }
-                ///allow resize on the right border
+                //allow resize on the right border
                 if (pt.X >= clientSize.Width - 16 && clientSize.Height >= 16)
                 {
                     m.Result = (IntPtr)(htRight);
@@ -431,16 +428,16 @@ namespace SublimeOverlay
 
         private void panelContainer_MouseMove(object sender, MouseEventArgs e)
         {
-            preventForceFocus = true;
-            if (e.Button == MouseButtons.Left && !ResizeLocation.IsEmpty)
+            _preventForceFocus = true;
+            if (e.Button == MouseButtons.Left && !_resizeLocation.IsEmpty)
             {
                 if (panelContainer.Cursor == Cursors.SizeNWSE)
-                    Size = new Size(e.Location.X - ResizeLocation.X + 3, e.Location.Y - ResizeLocation.Y + 30);
+                    Size = new Size(e.Location.X - _resizeLocation.X + 3, e.Location.Y - _resizeLocation.Y + 30);
                 else if (panelContainer.Cursor == Cursors.SizeWE)
-                    Size = new Size(e.Location.X - ResizeLocation.X, Size.Height);
+                    Size = new Size(e.Location.X - _resizeLocation.X, Size.Height);
                 else if (panelContainer.Cursor == Cursors.SizeNS)
-                    Size = new Size(Size.Width, e.Location.Y - ResizeLocation.Y + 30);
-                Region = RoundRegion(Width, Height, radius);
+                    Size = new Size(Size.Width, e.Location.Y - _resizeLocation.Y + 30);
+                Region = RoundRegion(Width, Height, _radius);
             }
             else if (e.X - panelContainer.Width > -16 && e.Y - panelContainer.Height > -16)
                 panelContainer.Cursor = Cursors.SizeNWSE;
@@ -451,32 +448,32 @@ namespace SublimeOverlay
             else
             {
                 panelContainer.Cursor = Cursors.Default;
-                preventForceFocus = false;
+                _preventForceFocus = false;
             }
 
         }
 
         private void panelContainer_MouseUp(object sender, MouseEventArgs e)
         {
-            preventForceFocus = false;
-            ResizeLocation = Point.Empty;
+            _preventForceFocus = false;
+            _resizeLocation = Point.Empty;
         }
         
         private void panelContainer_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                ResizeLocation = e.Location;
-                ResizeLocation.Offset(-panelContainer.Width, -panelContainer.Height);
-                if (!(ResizeLocation.X > -16 || ResizeLocation.Y > -16))
-                    ResizeLocation = Point.Empty;
+                _resizeLocation = e.Location;
+                _resizeLocation.Offset(-panelContainer.Width, -panelContainer.Height);
+                if (!(_resizeLocation.X > -16 || _resizeLocation.Y > -16))
+                    _resizeLocation = Point.Empty;
             }
             else
-                ResizeLocation = Point.Empty;
+                _resizeLocation = Point.Empty;
         }
         private void panelContainer_MouseLeave(object sender, EventArgs e)
         {
-            preventForceFocus = false;
+            _preventForceFocus = false;
         }
         public void HideTitleBar(IntPtr hwnd)
         {
@@ -504,7 +501,7 @@ namespace SublimeOverlay
 
         private void settingsButton_Click(object sender, EventArgs e)
         {
-            settingsWindow.Show();
+            _settingsWindow.Show();
         }
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -513,7 +510,10 @@ namespace SublimeOverlay
                 SetRestoreSize();
                 ChildTracker.Unhook();
             }
-            catch { }
+            catch
+            {
+                // ignored
+            }
         }
 
         private void SetRestoreSize()
@@ -533,63 +533,63 @@ namespace SublimeOverlay
         {
             get
             {
-                return oX;
+                return _oX;
             }
-            set { oX = value; }
+            set { _oX = value; }
         }
         public int OffsetY
         {
             get
             {
-                return oY;
+                return _oY;
             }
             set 
             {
-                oY = value;
+                _oY = value;
             }
         }
         public bool ShowTitle
         {
             get
             {
-                return showTitle;
+                return _showTitle;
             }
             set
             {
-                showTitle = value;
+                _showTitle = value;
             }
         }
         public Color CurrentColor
         {
             get
             {
-                return currentColor;
+                return _currentColor;
             }
             set
             {
-                currentColor = value;
+                _currentColor = value;
             }
         }
         public bool ReverseWindowControls
         {
             get
             {
-                return reverseWindowControls;
+                return _reverseWindowControls;
             }
             set
             {
-                reverseWindowControls = value;
+                _reverseWindowControls = value;
             }
         }
         public bool WindowControlsOnTheRight
         {
             get
             {
-                return windowControlsOnTheRight;
+                return _windowControlsOnTheRight;
             }
             set
             {
-                windowControlsOnTheRight = value;
+                _windowControlsOnTheRight = value;
             }
         }
 
