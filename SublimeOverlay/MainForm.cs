@@ -4,8 +4,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security;
-using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -180,17 +178,10 @@ namespace SublimeOverlay
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            try
+            if (_triggerExit) // if instance is closed from taskbar
             {
-                if (_triggerExit) // if instance is closed from taskbar
-                {
-                    pDocked.CloseMainWindow(); // close editor and wait till it closed
-                    e.Cancel = true; 
-                }
-            }
-            catch
-            {
-                // ignored
+                pDocked.CloseMainWindow(); // close editor and wait till it closed
+                e.Cancel = true; 
             }
         }
         private void ParseArgs()
@@ -213,16 +204,8 @@ namespace SublimeOverlay
                     path = parts.Last().Replace("\"", "");
                 }
                 if (args.Count(arg => arg.Contains("--startsublime")) == 0) return;
-                try
+                if (!RunSublime(path))
                 {
-                    if (!RunSublime(path))
-                    {
-                        Application.Exit();
-                    }
-                }
-                catch (SecurityException)
-                {
-                    MessageBox.Show(@"You need to run this app as administrator to start editor automatically!", @"I need administrator rights", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Application.Exit();
                 }
             }
@@ -247,16 +230,9 @@ namespace SublimeOverlay
                 WindowState = FormWindowState.Minimized;
             });
         }
-
-        private bool IsAdministrator()
-        {
-            return (new WindowsPrincipal(WindowsIdentity.GetCurrent()))
-                    .IsInRole(WindowsBuiltInRole.Administrator);
-        } 
+//
         private bool RunSublime(string path)
         {
-            if (!IsAdministrator())
-                throw new SecurityException();
             if (path == "")
             {
                 string path64 = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + @"\Sublime Text 3\sublime_text.exe";
@@ -283,7 +259,7 @@ namespace SublimeOverlay
                 do
                 {
                     Thread.Sleep(1000);
-                    if (++tries == maxTries)
+                    if (tries++ == maxTries)
                     {
                         MessageBox.Show(@"Sublime is not starting so far. Please manually kill it from processes and try again!");
                         return false;
