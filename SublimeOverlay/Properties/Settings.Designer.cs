@@ -61,18 +61,6 @@ namespace SublimeOverlay.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("30, 30, 30")]
-        public global::System.Drawing.Color color {
-            get {
-                return ((global::System.Drawing.Color)(this["color"]));
-            }
-            set {
-                this["color"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
         public int radius {
             get {
@@ -128,6 +116,54 @@ namespace SublimeOverlay.Properties {
             }
             set {
                 this["lastWindowPosition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("33, 33, 33")]
+        public global::System.Drawing.Color gradientFirstColor {
+            get {
+                return ((global::System.Drawing.Color)(this["gradientFirstColor"]));
+            }
+            set {
+                this["gradientFirstColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("25, 25, 25")]
+        public global::System.Drawing.Color gradientSecondColor {
+            get {
+                return ((global::System.Drawing.Color)(this["gradientSecondColor"]));
+            }
+            set {
+                this["gradientSecondColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool gradientModeEnabled {
+            get {
+                return ((bool)(this["gradientModeEnabled"]));
+            }
+            set {
+                this["gradientModeEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("33, 33, 33")]
+        public global::System.Drawing.Color titleBarColor {
+            get {
+                return ((global::System.Drawing.Color)(this["titleBarColor"]));
+            }
+            set {
+                this["titleBarColor"] = value;
             }
         }
     }

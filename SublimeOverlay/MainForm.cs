@@ -16,9 +16,12 @@ namespace SublimeOverlay
         private static int _oX = Properties.Settings.Default.offsetX;
         private static int _oY = Properties.Settings.Default.offsetY;
         private static bool _showTitle = Properties.Settings.Default.showTitle;
-        private static Color _currentColor = Properties.Settings.Default.color;
+        private static Color _gradientFirstColor = Properties.Settings.Default.gradientFirstColor;
+        private static Color _gradientSecondColor = Properties.Settings.Default.gradientSecondColor;
+        private static Color _titleBarColor = Properties.Settings.Default.titleBarColor;
         private static bool _reverseWindowControls = Properties.Settings.Default.reverseWindowControls;
         private static bool _windowControlsOnTheRight = Properties.Settings.Default.windowControlsOnTheRight;
+        private static bool _gradientModeEnabled = Properties.Settings.Default.gradientModeEnabled;
         private bool _triggerExit = true;
         private readonly Settings _settingsWindow;
         private bool _preventForceFocus;
@@ -26,6 +29,7 @@ namespace SublimeOverlay
         
         public MainForm()
         {
+            // TODO: GRADIENT PANEL
             InitializeComponent();
             Region = RoundRegion(Width, Height, _radius);
             _settingsWindow = new Settings(this);
@@ -85,8 +89,21 @@ namespace SublimeOverlay
         }
         public void RefreshColor()
         {
-            BackColor = container.BackColor = panelContainer.BackColor = titleBar.BackColor = CurrentColor;
-            titleText.ForeColor = IdealTextColor(BackColor);
+            Color color;
+            if (GradientModeEnabled)
+            {
+                color = GradientSecondColor;
+                titleBar.GradientFirstColor = GradientFirstColor;
+                titleBar.GradientSecondColor = GradientSecondColor;
+            }
+            else
+            {
+                color = TitleBarColor; 
+                titleBar.GradientFirstColor = titleBar.GradientSecondColor = color;
+            }
+            titleBar.Invalidate();
+            BackColor = container.BackColor = panelContainer.BackColor = color;
+            titleText.ForeColor = IdealTextColor(color);
         }
         public void RefreshVisuals()
         {
@@ -543,15 +560,26 @@ namespace SublimeOverlay
                 _showTitle = value;
             }
         }
-        public Color CurrentColor
+        public Color GradientFirstColor
         {
             get
             {
-                return _currentColor;
+                return _gradientFirstColor;
             }
             set
             {
-                _currentColor = value;
+                _gradientFirstColor = value;
+            }
+        }
+        public Color GradientSecondColor
+        {
+            get
+            {
+                return _gradientSecondColor;
+            }
+            set
+            {
+                _gradientSecondColor = value;
             }
         }
         public bool ReverseWindowControls
@@ -576,7 +604,28 @@ namespace SublimeOverlay
                 _windowControlsOnTheRight = value;
             }
         }
-
+        public bool GradientModeEnabled
+        {
+            get
+            {
+                return _gradientModeEnabled;
+            }
+            set
+            {
+                _gradientModeEnabled = value;
+            }
+        }
+        public Color TitleBarColor
+        {
+            get
+            {
+                return _titleBarColor;
+            }
+            set
+            {
+                _titleBarColor = value;
+            }
+        }
         enum WindowControlPosition
         {
             Left, 

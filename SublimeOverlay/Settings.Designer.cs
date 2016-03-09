@@ -36,7 +36,6 @@
             this.resetButton = new System.Windows.Forms.Button();
             this.showTitleCheckbox = new System.Windows.Forms.CheckBox();
             this.colorPreview = new System.Windows.Forms.Panel();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.changeColorButton = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -45,10 +44,19 @@
             this.label4 = new System.Windows.Forms.Label();
             this.reverseWindowControls = new System.Windows.Forms.CheckBox();
             this.windowControlsOnTheRight = new System.Windows.Forms.CheckBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.primaryColorButton = new System.Windows.Forms.Button();
+            this.secondaryColorButton = new System.Windows.Forms.Button();
+            this.gradientPreview = new System.Windows.Forms.Panel();
+            this.singleColorMode = new System.Windows.Forms.RadioButton();
+            this.gradientMode = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.offsetXTrack)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.offsetYTrack)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.borderRadiusTrack)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // offsetXTrack
@@ -57,7 +65,7 @@
             this.offsetXTrack.Maximum = 35;
             this.offsetXTrack.Minimum = 1;
             this.offsetXTrack.Name = "offsetXTrack";
-            this.offsetXTrack.Size = new System.Drawing.Size(382, 45);
+            this.offsetXTrack.Size = new System.Drawing.Size(538, 45);
             this.offsetXTrack.TabIndex = 0;
             this.offsetXTrack.Value = 5;
             this.offsetXTrack.Scroll += new System.EventHandler(this.trackBar_Scroll);
@@ -86,14 +94,14 @@
             this.offsetYTrack.Maximum = 35;
             this.offsetYTrack.Minimum = 1;
             this.offsetYTrack.Name = "offsetYTrack";
-            this.offsetYTrack.Size = new System.Drawing.Size(382, 45);
+            this.offsetYTrack.Size = new System.Drawing.Size(538, 45);
             this.offsetYTrack.TabIndex = 2;
             this.offsetYTrack.Value = 5;
             this.offsetYTrack.Scroll += new System.EventHandler(this.trackBar_Scroll);
             // 
             // resetButton
             // 
-            this.resetButton.Location = new System.Drawing.Point(15, 311);
+            this.resetButton.Location = new System.Drawing.Point(94, 377);
             this.resetButton.Name = "resetButton";
             this.resetButton.Size = new System.Drawing.Size(379, 33);
             this.resetButton.TabIndex = 4;
@@ -117,16 +125,16 @@
             // colorPreview
             // 
             this.colorPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.colorPreview.Location = new System.Drawing.Point(37, 16);
+            this.colorPreview.Location = new System.Drawing.Point(43, 29);
             this.colorPreview.Name = "colorPreview";
             this.colorPreview.Size = new System.Drawing.Size(29, 28);
             this.colorPreview.TabIndex = 6;
             // 
             // changeColorButton
             // 
-            this.changeColorButton.Location = new System.Drawing.Point(93, 26);
+            this.changeColorButton.Location = new System.Drawing.Point(98, 32);
             this.changeColorButton.Name = "changeColorButton";
-            this.changeColorButton.Size = new System.Drawing.Size(280, 35);
+            this.changeColorButton.Size = new System.Drawing.Size(76, 35);
             this.changeColorButton.TabIndex = 7;
             this.changeColorButton.Text = "Pick color";
             this.changeColorButton.UseVisualStyleBackColor = true;
@@ -135,7 +143,7 @@
             // button3
             // 
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.25F);
-            this.button3.Location = new System.Drawing.Point(28, 47);
+            this.button3.Location = new System.Drawing.Point(34, 60);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(46, 23);
             this.button3.TabIndex = 8;
@@ -145,12 +153,13 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.changeColorButton);
-            this.groupBox1.Controls.Add(this.button3);
-            this.groupBox1.Controls.Add(this.colorPreview);
+            this.groupBox1.Controls.Add(this.gradientMode);
+            this.groupBox1.Controls.Add(this.singleColorMode);
+            this.groupBox1.Controls.Add(this.groupBox3);
+            this.groupBox1.Controls.Add(this.groupBox2);
             this.groupBox1.Location = new System.Drawing.Point(15, 232);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(379, 77);
+            this.groupBox1.Size = new System.Drawing.Size(535, 123);
             this.groupBox1.TabIndex = 9;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Base Color";
@@ -170,7 +179,7 @@
             this.borderRadiusTrack.Maximum = 35;
             this.borderRadiusTrack.Minimum = 1;
             this.borderRadiusTrack.Name = "borderRadiusTrack";
-            this.borderRadiusTrack.Size = new System.Drawing.Size(382, 45);
+            this.borderRadiusTrack.Size = new System.Drawing.Size(538, 45);
             this.borderRadiusTrack.TabIndex = 10;
             this.borderRadiusTrack.Value = 10;
             this.borderRadiusTrack.Scroll += new System.EventHandler(this.borderRadiusTrack_Scroll);
@@ -178,7 +187,7 @@
             // label4
             // 
             this.label4.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label4.Location = new System.Drawing.Point(12, 347);
+            this.label4.Location = new System.Drawing.Point(91, 409);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(382, 67);
             this.label4.TabIndex = 12;
@@ -207,11 +216,88 @@
             this.windowControlsOnTheRight.UseVisualStyleBackColor = true;
             this.windowControlsOnTheRight.CheckedChanged += new System.EventHandler(this.windowControlsOnTheRight_CheckedChanged);
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.changeColorButton);
+            this.groupBox2.Controls.Add(this.colorPreview);
+            this.groupBox2.Controls.Add(this.button3);
+            this.groupBox2.Location = new System.Drawing.Point(6, 16);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(200, 100);
+            this.groupBox2.TabIndex = 9;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Single color mode";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.gradientPreview);
+            this.groupBox3.Controls.Add(this.secondaryColorButton);
+            this.groupBox3.Controls.Add(this.primaryColorButton);
+            this.groupBox3.Enabled = false;
+            this.groupBox3.Location = new System.Drawing.Point(218, 16);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(311, 100);
+            this.groupBox3.TabIndex = 10;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Gradient mode";
+            // 
+            // primaryColorButton
+            // 
+            this.primaryColorButton.Location = new System.Drawing.Point(20, 60);
+            this.primaryColorButton.Name = "primaryColorButton";
+            this.primaryColorButton.Size = new System.Drawing.Size(126, 23);
+            this.primaryColorButton.TabIndex = 0;
+            this.primaryColorButton.Text = "Pick primary color";
+            this.primaryColorButton.UseVisualStyleBackColor = true;
+            this.primaryColorButton.Click += new System.EventHandler(this.primaryColorButton_Click);
+            // 
+            // secondaryColorButton
+            // 
+            this.secondaryColorButton.Location = new System.Drawing.Point(179, 60);
+            this.secondaryColorButton.Name = "secondaryColorButton";
+            this.secondaryColorButton.Size = new System.Drawing.Size(126, 23);
+            this.secondaryColorButton.TabIndex = 1;
+            this.secondaryColorButton.Text = "Pick secondary color";
+            this.secondaryColorButton.UseVisualStyleBackColor = true;
+            this.secondaryColorButton.Click += new System.EventHandler(this.secondaryColorButton_Click);
+            // 
+            // gradientPreview
+            // 
+            this.gradientPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.gradientPreview.Location = new System.Drawing.Point(20, 29);
+            this.gradientPreview.Name = "gradientPreview";
+            this.gradientPreview.Size = new System.Drawing.Size(285, 28);
+            this.gradientPreview.TabIndex = 7;
+            this.gradientPreview.Paint += new System.Windows.Forms.PaintEventHandler(this.gradientPreview_Paint);
+            // 
+            // singleColorMode
+            // 
+            this.singleColorMode.AutoSize = true;
+            this.singleColorMode.Checked = true;
+            this.singleColorMode.Location = new System.Drawing.Point(104, 16);
+            this.singleColorMode.Name = "singleColorMode";
+            this.singleColorMode.Size = new System.Drawing.Size(14, 13);
+            this.singleColorMode.TabIndex = 9;
+            this.singleColorMode.TabStop = true;
+            this.singleColorMode.Tag = "";
+            this.singleColorMode.UseVisualStyleBackColor = true;
+            this.singleColorMode.CheckedChanged += new System.EventHandler(this.singleColorMode_CheckedChanged);
+            // 
+            // gradientMode
+            // 
+            this.gradientMode.AutoSize = true;
+            this.gradientMode.Location = new System.Drawing.Point(304, 16);
+            this.gradientMode.Name = "gradientMode";
+            this.gradientMode.Size = new System.Drawing.Size(14, 13);
+            this.gradientMode.TabIndex = 10;
+            this.gradientMode.Tag = "";
+            this.gradientMode.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(414, 423);
+            this.ClientSize = new System.Drawing.Size(562, 485);
             this.Controls.Add(this.windowControlsOnTheRight);
             this.Controls.Add(this.reverseWindowControls);
             this.Controls.Add(this.label4);
@@ -233,7 +319,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.offsetXTrack)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.offsetYTrack)).EndInit();
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.borderRadiusTrack)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -248,7 +337,6 @@
         private System.Windows.Forms.Button resetButton;
         private System.Windows.Forms.CheckBox showTitleCheckbox;
         private System.Windows.Forms.Panel colorPreview;
-        private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.Button changeColorButton;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -257,5 +345,12 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox reverseWindowControls;
         private System.Windows.Forms.CheckBox windowControlsOnTheRight;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Panel gradientPreview;
+        private System.Windows.Forms.Button secondaryColorButton;
+        private System.Windows.Forms.Button primaryColorButton;
+        private System.Windows.Forms.RadioButton gradientMode;
+        private System.Windows.Forms.RadioButton singleColorMode;
     }
 }

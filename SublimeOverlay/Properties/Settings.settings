@@ -11,9 +11,6 @@
     <Setting Name="showTitle" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="color" Type="System.Drawing.Color" Scope="User">
-      <Value Profile="(Default)">30, 30, 30</Value>
-    </Setting>
     <Setting Name="radius" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
@@ -28,6 +25,18 @@
     </Setting>
     <Setting Name="lastWindowPosition" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">20, 20</Value>
+    </Setting>
+    <Setting Name="gradientFirstColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">33, 33, 33</Value>
+    </Setting>
+    <Setting Name="gradientSecondColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">25, 25, 25</Value>
+    </Setting>
+    <Setting Name="gradientModeEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="titleBarColor" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">33, 33, 33</Value>
     </Setting>
   </Settings>
 </SettingsFile>

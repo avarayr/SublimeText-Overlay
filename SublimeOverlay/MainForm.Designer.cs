@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.container = new System.Windows.Forms.Panel();
-            this.titleBar = new System.Windows.Forms.Panel();
+            this.titleBar = new GradientPanel();
             this.windowControlsContainer = new System.Windows.Forms.Panel();
             this.minimizeButton = new System.Windows.Forms.PictureBox();
             this.closeButton = new System.Windows.Forms.PictureBox();
@@ -143,6 +143,7 @@
             // 
             this.titleText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.titleText.AutoEllipsis = true;
+            this.titleText.BackColor = System.Drawing.Color.Transparent;
             this.titleText.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.titleText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
             this.titleText.Location = new System.Drawing.Point(199, 8);
@@ -213,7 +214,6 @@
         #endregion
 
         private System.Windows.Forms.Panel container;
-        private System.Windows.Forms.Panel titleBar;
         private System.Windows.Forms.PictureBox closeButton;
         private System.Windows.Forms.PictureBox minimizeButton;
         private System.Windows.Forms.PictureBox maximizeButton;
@@ -223,6 +223,7 @@
         private System.Windows.Forms.ToolTip titleTooltip;
         private System.Windows.Forms.PictureBox settingsButton;
         private System.Windows.Forms.Panel windowControlsContainer;
+        private GradientPanel titleBar;
     }
 }
 
