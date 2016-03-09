@@ -14,6 +14,8 @@ public class GradientPanel : Panel
     }
     protected override void OnPaintBackground(PaintEventArgs e)
     {
+        if (ClientRectangle.Width == 0 || ClientRectangle.Height == 0)
+            return;
         using (var brush = new LinearGradientBrush(this.ClientRectangle,
                    GradientFirstColor, GradientSecondColor, LinearGradientMode.Vertical))
         {
