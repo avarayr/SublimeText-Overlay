@@ -115,16 +115,17 @@ namespace SublimeOverlay
         
         private void DockWindow()
         {
-            pDocked = Process.GetProcesses().FirstOrDefault(s => s.MainWindowTitle.Contains(@"Sublime Text") && Path.GetFileNameWithoutExtension(s.MainModule.FileName) == "sublime_text");
-            if (pDocked == null)
+            var process = Process.GetProcessesByName("sublime_text");
+            if (process.Length == 0)
             {
                 DialogResult answer = MessageBox.Show(@"Please launch Sublime and click Retry", @"Launch the editor", MessageBoxButtons.RetryCancel, MessageBoxIcon.Warning);
                 if (answer == DialogResult.Retry)
                     DockWindow();
                 else
-                    Application.Exit();
+                    Environment.Exit(0);
                 return;
             }
+            pDocked = process.First();
             pDocked.EnableRaisingEvents = true;
             pDocked.Exited += editor_Exited;
             ChildTracker.RestoreWindow(pDocked.MainWindowHandle);
@@ -195,7 +196,7 @@ namespace SublimeOverlay
         }
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (_triggerExit) // if instance is closed from taskbar
+            if (_triggerExit && pDocked != null) // if instance is closed from taskbar
             {
                 pDocked.CloseMainWindow(); // close editor and wait till it closed
                 e.Cancel = true; 
