@@ -16,7 +16,7 @@ public class GradientPanel : Panel
     {
         if (ClientRectangle.Width == 0 || ClientRectangle.Height == 0)
             return;
-        using (var brush = new LinearGradientBrush(this.ClientRectangle,
+        using (var brush = new LinearGradientBrush(ClientRectangle,
                    GradientFirstColor, GradientSecondColor, LinearGradientMode.Vertical))
         {
             e.Graphics.FillRectangle(brush, this.ClientRectangle);
