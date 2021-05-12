@@ -1,4 +1,7 @@
 ## Sublime Overlay
+
+# :no_entry: THIS PROJECT IS DEPRECATED AND NO LONGER MAINTANED
+
 ![img](https://img.shields.io/badge/version-stable-lightgrey.svg)
 ![img](https://img.shields.io/github/issues/mikadev001/SublimeText-Overlay.svg)
 
